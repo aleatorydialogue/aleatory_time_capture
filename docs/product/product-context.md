@@ -8,7 +8,7 @@ Customers are not buying a reconstruction method or file format. They are buying
 
 ## Current product stage
 
-Aleatory Spatial Memories is an experimental v0. The key product line is **Remembering Presence**: meaningful events and scenes captured from multiple viewpoints so customers can return to a spatial representation of their own past. Depending on what the current workflow can faithfully support, an experience may be delivered as a static spatial scene or volumetric video.
+Aleatory Time Capture is an experimental v0. The key product line is **Remembering Presence**: meaningful events and scenes captured from multiple viewpoints so customers can return to a spatial representation of their own past. Depending on what the current workflow can faithfully support, an experience may be delivered as a static spatial scene or volumetric video.
 
 The immediate offer is a limited **Founding Captures** program in Connecticut using the founder's current mobile reconstruction workflow. It will include only a small number of custom scenes and may be free or offered at a low introductory price in exchange for candid feedback. Exact eligibility, price, deliverables, and publication rights must be agreed per capture. It is not yet a broadly available, standardized service.
 

@@ -1,8 +1,8 @@
-# Aleatory Spatial Memories — Project Brief
+# Aleatory Time Capture — Project Brief
 
 ## Purpose
 
-Aleatory Spatial Memories is a consumer-facing reality capture business focused on preserving meaningful moments, people, objects, and places as high-fidelity spatial memories.
+Aleatory Time Capture is a consumer-facing reality capture business focused on preserving meaningful moments, people, objects, and places as high-fidelity spatial memories.
 
 The business should not primarily market Gaussian splats, photogrammetry, neural rendering, or other reconstruction technologies.
 
@@ -14,7 +14,7 @@ A useful framing is:
 
 > Photography captures a view.
 > Video captures a sequence.
-> Aleatory Spatial Memories captures the space itself.
+> Aleatory Time Capture captures the space itself.
 
 The goal is to make advanced 3D and 4D capture understandable and desirable to ordinary people who may have no technical interest in how the reconstruction is produced.
 
@@ -45,7 +45,7 @@ They are buying a richer record of something they care about.
 
 ## Long-Term Vision
 
-Aleatory Spatial Memories may eventually operate through two primary capture systems.
+Aleatory Time Capture may eventually operate through two primary capture systems.
 
 ### Mobile Capture
 
@@ -172,7 +172,9 @@ The durable product is preserved reality.
 
 Working name:
 
-**Aleatory Spatial Memories**
+**Aleatory Time Capture**
+
+Aleatory is the underlying company. Time Capture is the descriptive project and service name. **Remembering Presence** remains the customer-facing product line.
 
 Other naming may be explored, but agents should not rename the project casually.
 
@@ -205,17 +207,17 @@ Avoid making the customer feel as if they need technical knowledge to understand
 
 ## Relationship to aleatory.ai
 
-Aleatory Spatial Memories is an operating project under aleatory.ai.
+Aleatory Time Capture is an operating project under aleatory.ai.
 
 aleatory.ai is the broader experimental company focused on using advanced AI systems to build unusual products, services, and creative projects.
 
-Spatial Memories is intended to become one of the first serious market-facing applications built from Aleatory's technical experimentation.
+Time Capture is intended to become one of the first serious market-facing applications built from Aleatory's technical experimentation.
 
 ---
 
 ## AI-First Operating Model
 
-Aleatory Spatial Memories should itself be built as an AI-first company.
+Aleatory Time Capture should itself be built as an AI-first company.
 
 The project is also an experiment in maximizing the leverage of one human founder through AI agents, automation, and agent swarms.
 
@@ -249,16 +251,16 @@ Development may be streamed and documented through the existing **Holding the St
 
 Holding the String focuses on the broader process of a human directing increasingly autonomous AI systems.
 
-The Spatial Memories business should remain customer-facing and emotionally oriented.
+The Time Capture business should remain customer-facing and emotionally oriented.
 
 This creates two related narratives:
 
-1. **Aleatory Spatial Memories:** the product and the memories being created.
+1. **Aleatory Time Capture:** the service and the memories being created.
 2. **Holding the String:** how one person is using AI agents to build the company behind it.
 
 Raw development streams, swarm activity, technical failures, decisions, and experiments belong primarily under Holding the String.
 
-Finished customer-facing capture content belongs primarily under the Spatial Memories brand.
+Finished customer-facing capture content belongs primarily under the Time Capture brand.
 
 ---
 

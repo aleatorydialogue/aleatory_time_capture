@@ -2,9 +2,9 @@
 
 ## Brand role
 
-Aleatory Spatial Memories is the customer-facing service. It should make advanced capture feel emotionally legible and desirable without requiring technical literacy.
+Aleatory Time Capture is the customer-facing service. It should make advanced capture feel emotionally legible and desirable without requiring technical literacy.
 
-It operates under aleatory.ai, the broader experimental company. Holding the String tells the behind-the-scenes story of a human building with increasingly autonomous AI systems. Customer-facing capture stories belong primarily to Spatial Memories; raw development process, swarm activity, and technical failures belong primarily to Holding the String.
+It operates under Aleatory, the broader experimental company. Holding the String tells the behind-the-scenes story of a human building with increasingly autonomous AI systems. Customer-facing capture stories belong primarily to Time Capture; raw development process, swarm activity, and technical failures belong primarily to Holding the String.
 
 Cross-links should be lightweight and intentional. The build-in-public narrative must not make customers or intimate memories feel like experimental content.
 
@@ -16,7 +16,7 @@ This comparison is a conceptual aid, not a claim that every aspect of a moment o
 
 ## Launch product line
 
-**Remembering Presence** describes the central promise: access to the felt spatial presence of one's own past events. Use it as a product-line name, not as a guarantee of literal presence, perfect reconstruction, or universal volumetric-video delivery. Aleatory Spatial Memories remains the company and service brand.
+**Remembering Presence** describes the central promise: access to the felt spatial presence of one's own past events. Use it as a product-line name, not as a guarantee of literal presence, perfect reconstruction, or universal volumetric-video delivery. **Aleatory Time Capture** is the service brand: Aleatory is the underlying company, while Time Capture is the descriptive project name.
 
 ## Personality
 
@@ -43,4 +43,4 @@ Authentic captures should ultimately anchor the identity. Concept imagery must b
 
 ## Naming
 
-“Aleatory Spatial Memories” is the working name. Naming alternatives require an explicit founder-led decision and should preserve memory, space, preservation, future access, emotional significance, and experimental character. Domain, trademark, pronunciation, and consumer comprehension remain open research questions.
+“Aleatory Time Capture” is the accepted name. Aleatory is the underlying company; Time Capture identifies this project and service. Naming alternatives require an explicit founder-led decision and should preserve memory, time, space, preservation, future access, emotional significance, and experimental character. Trademark and consumer comprehension remain open research questions.

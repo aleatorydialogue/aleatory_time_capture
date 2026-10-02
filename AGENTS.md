@@ -1,6 +1,6 @@
 # Agent Guide
 
-This repository contains Aleatory Spatial Memories, a consumer-facing reality-capture business under aleatory.ai.
+This repository contains Aleatory Time Capture, a consumer-facing reality-capture business under aleatory.ai.
 
 ## Read order
 

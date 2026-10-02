@@ -1,6 +1,6 @@
-# Aleatory Spatial Memories
+# Aleatory Time Capture
 
-Aleatory Spatial Memories is a consumer-facing reality-capture project for preserving meaningful people, places, objects, and moments as explorable spatial memories.
+Aleatory Time Capture is a consumer-facing reality-capture project for preserving meaningful people, places, objects, and moments as explorable spatial memories.
 
 The project is currently in its experimental v0 phase. The launch product line, **Remembering Presence**, is beginning with a small Founding Captures program in Connecticut. The website is an Astro-based, static-first experience with a configurable application form.
 
