@@ -12,7 +12,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       <section class="hero" aria-labelledby="hero-title">
         <div class="hero-copy">
           <p class="eyebrow">Introducing</p>
-          <h1 id="hero-title">Remembering <em>Presence</em></h1>
+          <h1 id="hero-title">Aleatory <em>Time Capture</em></h1>
+          <p class="product-line">Remembering Presence</p>
           <p class="hero-lede">
             Not just how a moment looked. A memory of being there—preserved in
             space, so one day you can move through it again.
@@ -32,29 +33,40 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
         <figure class="hero-film">
           <video
+            data-hero-video
             controls
+            loop
+            muted
             playsinline
-            preload="auto"
-            poster="/video/intro-poster.jpg"
+            preload="metadata"
+            poster="/site_video/capture03-poster.jpg"
             aria-describedby="hero-film-caption"
           >
-            <source src="/video/intro.mp4" type="video/mp4" />
-            <track
-              default
-              kind="captions"
-              srclang="en"
-              label="English"
-              src="/video/intro-captions.vtt"
-            />
+            <source src="/site_video/capture03-pingpong.mp4" type="video/mp4" />
             Your browser does not support embedded video. You can
-            <a href="/video/intro.mp4">watch the film directly</a>.
+            <a href="/site_video/capture03-pingpong.mp4"
+              >watch the capture study directly</a
+            >.
           </video>
           <figcaption id="hero-film-caption">
-            <span>Concept film · 00:39</span>
-            <span>Turn on sound to hear the narration.</span>
+            <span>Capture study · 00:33</span>
+            <span>Dynamic reconstruction preview</span>
           </figcaption>
         </figure>
       </section>
+
+      <script is:inline>
+        const heroVideo = document.querySelector("[data-hero-video]");
+        const reducedMotion = window.matchMedia(
+          "(prefers-reduced-motion: reduce)",
+        );
+
+        if (heroVideo instanceof HTMLVideoElement && !reducedMotion.matches) {
+          heroVideo.play().catch(() => {
+            // The poster and native play control remain available if blocked.
+          });
+        }
+      </script>
 
       <section
         id="what-it-is"

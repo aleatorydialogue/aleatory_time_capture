@@ -4,3 +4,4 @@ node_modules
 package-lock.json
 PROJECT_BRIEF.md
 public/splat-viewer
+public/site_video

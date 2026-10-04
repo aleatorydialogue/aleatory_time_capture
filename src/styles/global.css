@@ -149,6 +149,13 @@ h1 em {
   color: var(--violet);
   font-weight: 400;
 }
+.product-line {
+  margin: 0.3rem 0 0.4rem;
+  color: var(--violet);
+  font-family: var(--serif);
+  font-size: clamp(1.15rem, 1.5vw, 1.4rem);
+  letter-spacing: 0.02em;
+}
 .hero-lede {
   max-width: 35rem;
   font-size: clamp(1.12rem, 1.7vw, 1.48rem);
