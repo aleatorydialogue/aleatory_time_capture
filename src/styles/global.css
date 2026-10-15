@@ -247,6 +247,7 @@ h1 em {
 }
 .manifesto h2,
 .process h2,
+.omnema h2,
 .founding h2,
 .apply h2 {
   font-family: var(--serif);
@@ -502,6 +503,31 @@ h1 em {
   max-width: 28rem;
   color: #5b574f;
   line-height: 1.55;
+}
+
+.omnema {
+  display: grid;
+  grid-template-columns: 0.85fr 1fr;
+  gap: 8vw;
+  background: var(--violet);
+}
+.omnema h2 {
+  margin-top: 2rem;
+}
+.omnema .section-index {
+  color: var(--ink);
+}
+.omnema-copy {
+  min-width: 0;
+}
+.omnema-copy p {
+  max-width: 34rem;
+  margin: 0 0 1.5rem;
+  line-height: 1.6;
+}
+.omnema-copy p:first-child {
+  font-size: clamp(1.25rem, 2vw, 1.8rem);
+  line-height: 1.45;
 }
 
 .founding {
@@ -769,6 +795,7 @@ footer > p {
   .manifesto,
   .spatial-example,
   .process,
+  .omnema,
   .founding,
   .apply {
     grid-template-columns: 1fr;

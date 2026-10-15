@@ -26,6 +26,15 @@ The v0 website should introduce **Remembering Presence**, help a nontechnical vi
 
 These may begin as sections rather than separate routes if that produces a clearer, faster v0.
 
+## Omnema capture application
+
+The home page includes a dedicated Omnema section after How It Works, with a
+primary-navigation anchor and an **Open Omnema** link to
+<https://capture.rememberingpresence.com/auto>. Omnema is our distributed capture
+application, using available phones to record synchronized video from multiple
+angles. This description comes from the founder; it does not establish device
+compatibility, synchronization accuracy, or a promised reconstruction result.
+
 ## Content requirements
 
 - At least one authentic, consented example before strong fidelity claims
