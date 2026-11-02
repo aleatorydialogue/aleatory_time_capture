@@ -12,4 +12,6 @@ To update viewer code, run `npm ci && npm run build` in the viewer repository, t
 
 The PLY assets are external and must not be added to this repository. The old static `index.sog` has been removed from the current tree; it remains in Git history. The retained viewer MIT license and third-party notices apply to the bundled application.
 
-Bundled viewer source revision: c7f9779 (main).
+Bundled viewer source revision: 9478316 (main).
+
+Foundry scenes use the sorted renderer even when this origin has a saved Performance Mode preference. The stochastic renderer was reproduced omitting the static room. The iframe URL and module import are revisioned to refresh cached viewer code. Preserve/update these revision query strings when replacing the bundle.

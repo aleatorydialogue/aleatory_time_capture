@@ -84306,7 +84306,9 @@ function validateSimilarity(value) {
 }
 
 const isFoundry = (url) => /(?:\.dynamic\.ply(?:\.gz)?|\.foundry\.json|(?:^|\/)scene\.json)(?:[?#]|$)/i.test(url);
-async function fetchBytes(url, signal, report = () => { }, expected, prefetched) {
+async function fetchBytes(url, signal, report = () => {
+    /* Later flipbook frames do not show the initial loading overlay. */
+}, expected, prefetched) {
     const response = await (prefetched ?? fetch(url, { signal }));
     const gzip = new URL(url, location.href).pathname.endsWith('.gz');
     const bytes = await readDownload(response, signal, report, gzip ? undefined : expected);
@@ -110666,7 +110668,9 @@ const resolveConfig = (options) => ({
     fullload: options.fullload ?? false,
     vr: options.vr ?? false,
     aa: options.aa ?? false,
-    stochastic: options.stochastic ?? false,
+    // Foundry's animated containers and hybrid layers require the sorted renderer.
+    // 'off' also overrides a saved Performance Mode preference from an earlier visit.
+    stochastic: isFoundry(options.contentFilename || options.contentUrl) ? 'off' : (options.stochastic ?? false),
     // the direct source reads the engine's own splat files, not the container a gsaf sequence
     // plays through; the work buffer source reads whatever the engine copied
     splatSource: isGsaf(options.contentUrl, options.contentFilename) ? 'workbuffer' : (options.splatSource ?? 'direct'),
