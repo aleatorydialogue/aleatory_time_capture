@@ -1,0 +1,34 @@
+{
+  "format": "single",
+  "model_url": "https://huggingface.co/aleatorydialogue/stmodels/resolve/main/scene.dynamic.ply",
+  "static_model_url": "https://huggingface.co/aleatorydialogue/stmodels/resolve/main/room.ply",
+  "T_dynamic_normalized_from_static_training": [
+    [
+      -0.1414821420861083,
+      -1.2753160757253783,
+      0.1693266098431114,
+      0.3393547742098157
+    ],
+    [
+      -0.9119674365686545,
+      -0.020732637812317267,
+      -0.9181532239781957,
+      1.175241383711339
+    ],
+    [
+      0.9074238196360815,
+      -0.21967898183389822,
+      -0.8963497904452812,
+      -0.3839814608730763
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "model_bytes": 70776703,
+  "static_model_bytes": 59001477,
+  "label": "A moment at home"
+}

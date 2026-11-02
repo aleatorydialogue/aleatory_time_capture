@@ -118,13 +118,13 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           <h2 id="example-title">Move through a captured scene.</h2>
           <p>
             A Spatial Memory is not limited to the camera's original position.
-            Drag to change your point of view and look around this early static
-            scene.
+            Drag to change your point of view as a captured moment plays within
+            the room.
           </p>
           <p class="example-note">
-            This placeholder demonstrates the medium, not a complete Founding
-            Capture deliverable. It requires WebGL and downloads about 30 MB
-            when opened.
+            This experimental scene combines a captured room with people in
+            motion. It downloads about 130 MB when opened; loading and playback
+            depend on your connection and device.
           </p>
         </div>
         <div class="splat-stage" data-splat-stage>
@@ -135,7 +135,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             <button class="button button-light" type="button" data-load-splat>
               Load interactive scene <span aria-hidden="true">↗</span>
             </button>
-            <p>Click to load · approximately 30 MB</p>
+            <p>Click to load · approximately 130 MB</p>
           </div>
           <noscript>
             <p class="splat-noscript">
@@ -152,8 +152,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
         loadButton?.addEventListener("click", () => {
           const frame = document.createElement("iframe");
-          frame.src = "/splat-viewer/index.html?webgl";
-          frame.title = "Interactive static Spatial Memory example";
+          frame.src = "/splat-viewer/index.html";
+          frame.title = "Interactive Spatial Memory with a captured moment";
           frame.allow = "fullscreen; xr-spatial-tracking";
           frame.setAttribute("allowfullscreen", "");
           stage.replaceChildren(frame);
