@@ -84520,6 +84520,10 @@ async function loadFoundry(app, url, response, progress, signal, controls = true
             room.addComponent('gsplat', { unified: true, asset });
             entity.addChild(room);
             staticRoom = room;
+            // Keep both layers current in the unified renderer. With an animated container,
+            // the asynchronous WebGL work-buffer path can consume a one-shot room transform
+            // update without uploading it, leaving AR pinch/placement visually misregistered.
+            room.gsplat.workBufferUpdate = WORKBUFFER_UPDATE_ALWAYS;
             const bounds = asset.resource.aabb.clone();
             bounds.setFromTransformedAabb(asset.resource.aabb, matrix);
             const combined = entity.gsplat.resource.aabb.clone();
