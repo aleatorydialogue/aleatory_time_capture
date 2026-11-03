@@ -1,20 +1,9 @@
-# Website video handoff
+# Homepage video
 
-Use capture03-pingpong.mp4 for the front-page showcase and capture03-poster.jpg as its loading poster. Copy both into the site's public/static media directory. No model download or viewer code is needed.
+The homepage uses opal-58e2c44c43f74117.mp4 and its matching poster, extracted at 20 seconds.
+This is the founder-selected landscape Opal presentation for session b143449e-3d25-44f6-bb09-28906867475d.
+Source: that session's opal/renders/opal-58e2c44c43f74117.mp4.
 
-The video follows the original cam02 trajectory forward, then plays the whole animation backward. It preserves the existing 15 fps preview cadence, at 960x540. Duration: 32.8 seconds, 492 frames, 19,058,975 bytes. Encoding: H.264, yuv420p, CRF 20, no audio, faststart MP4. Forward/reverse endpoints are not duplicated; the end-to-start loop continues into the next forward frame. Direction changes deliberately reverse the captured action too.
-
-HTML (adjust paths to the site's asset location):
-~~~html
-<video autoplay muted loop playsinline preload="metadata"
-       poster="/media/capture03-poster.jpg"
-       style="display:block;width:100%;height:auto">
-  <source src="/media/capture03-pingpong.mp4" type="video/mp4">
-</video>
-~~~
-In React, use autoPlay and playsInline with muted and loop. Keep the poster visible if autoplay is unavailable. Honor the site's reduced-motion preference by showing the poster or offering playback on request. Use object-fit:cover only if intentional cropping is acceptable; contain preserves the full capture.
-
-preview.html is a standalone example. Serve this folder via a local/static HTTP server to preview it. Production must serve the MP4 as video/mp4; byte-range support is useful. No special cross-origin headers are needed when these assets are hosted alongside the site.
-
-Source: outputs/mvdr_capture03/train_v2/cam02_continuous.mp4, rendered from the raw dynamic model using gsplat. This is a presentation video, not an interactive 3D asset. The raw representation remains unchanged.
-Validation: expected 492 frames / 32.8 seconds confirmed; complete decode finished without errors.
+Delivery: H.264/AAC, 1920x1080, 39.765 seconds. The source streams are copied without re-encoding; the MP4 metadata is moved to the beginning for progressive playback.
+The existing muted playback, controls, reduced-motion handling and click-to-load interactive scene remain in place.
+The earlier capture03 files and preview.html are retained as historical presentation assets.

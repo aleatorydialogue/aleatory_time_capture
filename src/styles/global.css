@@ -216,7 +216,7 @@ h1 em {
   display: block;
   width: 100%;
   height: auto;
-  aspect-ratio: 30 / 17;
+  aspect-ratio: 16 / 9;
   border: 1px solid rgba(255, 255, 255, 0.13);
   background: #11100e;
 }
