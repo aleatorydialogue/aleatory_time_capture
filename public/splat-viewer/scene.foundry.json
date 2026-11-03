@@ -1,6 +1,6 @@
 {
   "format": "single",
-  "model_url": "https://huggingface.co/aleatorydialogue/stmodels/resolve/main/scene.dynamic.ply",
+  "model_url": "https://huggingface.co/aleatorydialogue/stmodels/resolve/main/scene.dynamic.fsp.gz",
   "static_model_url": "https://huggingface.co/aleatorydialogue/stmodels/resolve/main/room.ply",
   "T_dynamic_normalized_from_static_training": [
     [
@@ -28,7 +28,7 @@
       1.0
     ]
   ],
-  "model_bytes": 70776703,
+  "model_bytes": 34557556,
   "static_model_bytes": 59001477,
   "label": "A moment at home",
   "scene_transform": [
