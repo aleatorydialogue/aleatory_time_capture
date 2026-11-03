@@ -84157,6 +84157,138 @@ let OrbitController$1 = class OrbitController extends InputController$1 {
 	}
 };
 
+const MODES = ['Room only', 'People only', 'Both animated', 'Both paused'];
+const SETUP = 30;
+const WARMUP = 3;
+const SAMPLE = 15;
+/** Opt-in, local-only comparison run. No capture or telemetry leaves the browser. */
+function diagnostics(app, setMode) {
+    const panel = document.createElement('details');
+    panel.open = true;
+    panel.style.cssText =
+        'position:absolute;top:70px;left:16px;z-index:60;background:#171b24ee;color:white;padding:12px;max-width:85vw;max-height:70vh;overflow:auto;font:13px monospace';
+    const title = document.createElement('summary');
+    title.textContent = 'AR performance test';
+    const output = document.createElement('pre');
+    output.style.whiteSpace = 'pre-wrap';
+    output.textContent =
+        'Enter AR. You have 30 seconds to place the room and move inside. Then hold a similar viewpoint for four automatic 18-second stages (3 seconds warmup + 15 seconds measured). Exit AR to read results. People and room files are unchanged.';
+    panel.append(title, output);
+    app.graphicsDevice.canvas.parentElement.append(panel);
+    let active = false, elapsed = 0, stage = -1, last = 0, lastText = 0;
+    let evaluation = 0, upload = 0;
+    let samples = [];
+    const results = [];
+    const emit = (lines) => app.fire('foundry:diagnostics', lines);
+    const finishStage = () => {
+        if (!samples.length)
+            return;
+        const mean = (values) => values.reduce((a, b) => a + b, 0) / values.length;
+        const times = samples.map((s) => s.dt).sort((a, b) => a - b);
+        const gpu = samples.flatMap((s) => (s.gpu === null ? [] : [s.gpu]));
+        results.push(`${MODES[stage]}: ${(1000 / mean(times)).toFixed(1)} fps; p95 frame ${times[Math.min(times.length - 1, Math.ceil(times.length * 0.95) - 1)].toFixed(1)} ms\n  CPU animation ${mean(samples.map((s) => s.evaluation)).toFixed(2)} ms/frame; upload submission ${mean(samples.map((s) => s.upload)).toFixed(2)} ms/frame\n  GPU ${gpu.length ? mean(gpu).toFixed(2) + ' ms' : 'unavailable'}; splats ${Math.round(mean(samples.map((s) => s.splats)))}`);
+        samples = [];
+    };
+    const restore = () => setMode(-1);
+    const start = () => {
+        active = true;
+        elapsed = 0;
+        stage = -1;
+        last = 0;
+        lastText = 0;
+        evaluation = 0;
+        upload = 0;
+        samples = [];
+        results.length = 0;
+        panel.hidden = true;
+        restore();
+        emit(['AR test: position yourself', '30 seconds before measurement']);
+    };
+    const timing = (cpu, submission) => {
+        evaluation += cpu;
+        upload += submission;
+    };
+    const frame = () => {
+        if (!active)
+            return;
+        const now = performance.now();
+        if (!last) {
+            last = now;
+            return;
+        }
+        const dt = now - last;
+        last = now;
+        if (document.hidden || app.xr.visibilityState !== 'visible') {
+            evaluation = 0;
+            upload = 0;
+            return;
+        }
+        elapsed += dt / 1000;
+        if (stage < 0 && elapsed >= SETUP) {
+            stage = 0;
+            elapsed = 0;
+            setMode(stage);
+        }
+        else if (stage >= 0 && elapsed >= WARMUP + SAMPLE) {
+            finishStage();
+            stage++;
+            elapsed = 0;
+            if (stage === MODES.length) {
+                active = false;
+                restore();
+                emit(['Test complete', 'Exit AR to read results']);
+                output.textContent =
+                    results.join('\n\n') +
+                        '\n\nUpload submission is CPU time, not GPU transfer time. GPU timing may be unavailable. Compare from the same viewpoint; this is an instrumented run.';
+                return;
+            }
+            setMode(stage);
+        }
+        if (stage >= 0 && elapsed > WARMUP)
+            samples.push({
+                dt,
+                evaluation,
+                upload,
+                gpu: app.stats.gpuFrameTime > 0 ? app.stats.gpuFrameTime : null,
+                splats: app.stats.frame.gsplats
+            });
+        if (now - lastText > 250) {
+            lastText = now;
+            emit(stage < 0
+                ? ['Position inside the room', `Test begins in ${Math.ceil(SETUP - elapsed)}s`]
+                : [
+                    MODES[stage],
+                    `${elapsed < WARMUP ? 'Warmup' : 'Measuring'} · ${Math.ceil(WARMUP + SAMPLE - elapsed)}s left`,
+                    `Animation CPU ${evaluation.toFixed(1)} ms`,
+                    `Upload submit ${upload.toFixed(1)} ms`
+                ]);
+        }
+        evaluation = 0;
+        upload = 0;
+    };
+    const end = () => {
+        if (active) {
+            output.textContent =
+                'Test interrupted. Completed stages:\n\n' + (results.join('\n\n') || 'None. Enter AR to restart.');
+        }
+        active = false;
+        restore();
+        panel.hidden = false;
+        emit([]);
+    };
+    app.xr.on('start', start);
+    app.xr.on('end', end);
+    app.on('frameend', frame);
+    app.on('foundry:timing', timing);
+    return () => {
+        app.xr.off('start', start);
+        app.xr.off('end', end);
+        app.off('frameend', frame);
+        app.off('foundry:timing', timing);
+        panel.remove();
+    };
+}
+
 /** Reports bytes consumed from the response, without inventing a total for chunked delivery. */
 async function readDownload(response, signal, report, expected) {
     if (!response.ok)
@@ -84351,6 +84483,8 @@ async function staticAsset(app, url, signal, report, expected, preparing) {
     }
 }
 async function loadFoundry(app, url, response, progress, signal, controls = true) {
+    const diagnostic = new URL(location.href).searchParams.has('diagnostics');
+    let diagnosticMode = -1;
     const base = new URL(url, location.href);
     const json = base.pathname.endsWith('.json');
     let config = { model_url: base.href };
@@ -84484,7 +84618,9 @@ async function loadFoundry(app, url, response, progress, signal, controls = true
             entity.addComponent('gsplat', { unified: true, resource: container });
             const resource = container;
             apply = async (time) => {
+                const started = diagnostic ? performance.now() : 0;
                 evaluateSpline(model, time, centers, colors);
+                const evaluated = diagnostic ? performance.now() : 0;
                 centerTexture.lock().set(centers);
                 centerTexture.unlock();
                 const texture = resource.getTexture('dataColor'), target = texture.lock();
@@ -84497,6 +84633,8 @@ async function loadFoundry(app, url, response, progress, signal, controls = true
                         sortCenters[i * 3 + j] = centers[i * 4 + j];
                 resource.update(model.count);
                 entity.gsplat.workBufferUpdate = WORKBUFFER_UPDATE_ONCE;
+                if (diagnostic)
+                    app.fire('foundry:timing', evaluated - started, performance.now() - evaluated);
                 app.renderNextFrame = true;
             };
             await apply(0);
@@ -84639,8 +84777,21 @@ async function loadFoundry(app, url, response, progress, signal, controls = true
                 app.xr.off('end', show);
             });
         }
+        if (diagnostic && staticRoom) {
+            const subjectsVisible = entity.gsplat.enabled;
+            const roomVisible = staticRoom.enabled;
+            const cleanup = diagnostics(app, (mode) => {
+                diagnosticMode = mode;
+                entity.gsplat.enabled = mode < 0 ? subjectsVisible : mode !== 0;
+                staticRoom.enabled = mode < 0 ? roomVisible : mode !== 1;
+                app.renderNextFrame = true;
+            });
+            entity.once('destroy', cleanup);
+        }
         const update = (dt) => {
-            if (!player.paused && !document.hidden)
+            if (diagnosticMode === 0 || diagnosticMode === 3)
+                return;
+            if ((!player.paused || diagnosticMode === 1 || diagnosticMode === 2) && !document.hidden)
                 time = (time + dt * speed) % duration;
             pump();
         };
@@ -101661,7 +101812,7 @@ class XrSplatFloor {
 // and redrawn every INTERVAL seconds, often enough to read and seldom enough not to cost a frame
 const POSITION = new Vec3(-0.24, -0.28, -1);
 const WIDTH = 0.36;
-const LINES = 3;
+const LINES = 7;
 const LINE_HEIGHT = 0.034;
 const HEIGHT = LINES * LINE_HEIGHT + 0.012;
 const PIXELS = 1600;
@@ -101676,6 +101827,8 @@ class XrStats {
     app;
     quad;
     value = false;
+    diagnosticLines = [];
+    diagnosticHandle;
     // whether the panel has the profiler on, and what it was before
     profiling = false;
     profilerWas = false;
@@ -101687,6 +101840,10 @@ class XrStats {
      */
     constructor(app, camera) {
         this.app = app;
+        this.diagnosticHandle = app.on('foundry:diagnostics', (lines) => {
+            this.diagnosticLines = lines;
+            this.enabled = lines.length > 0;
+        });
         // facing the camera's +z, back at the eyes from in front of them
         this.quad = createQuad(app, camera, WIDTH, HEIGHT, PIXELS);
         this.quad.entity.setLocalPosition(POSITION);
@@ -101705,6 +101862,7 @@ class XrStats {
     destroy() {
         this.show(false);
         this.handle.off();
+        this.diagnosticHandle.off();
         this.quad.entity.destroy();
         this.quad.material.destroy();
         this.quad.texture.destroy();
@@ -101742,6 +101900,7 @@ class XrStats {
         const { fps, frameTime, gpuFrameTime, frame } = this.app.stats;
         const gpu = gpuFrameTime === undefined ? '–' : gpuFrameTime.toFixed(1);
         const lines = [
+            ...this.diagnosticLines,
             `Frame:  ${frameTime.toFixed(1)} ms (${fps} fps)`,
             `GPU:    ${gpu} ms`,
             `Splats: ${(frame.gsplats / 1e6).toFixed(2)}M`
@@ -102295,7 +102454,7 @@ const initXr = (global) => {
             splatRenderer = renderer;
         })
     ];
-    const stats = config.debug ? new XrStats(app, camera) : null;
+    const stats = config.debug || new URL(location.href).searchParams.has('diagnostics') ? new XrStats(app, camera) : null;
     const modeStep = (direction) => DEBUG_MODES[DEBUG_MODES.indexOf(quality.debugMode) + direction] ?? null;
     const debugItems = [
         {
