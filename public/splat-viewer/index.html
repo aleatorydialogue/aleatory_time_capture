@@ -53,8 +53,8 @@
             const skyboxUrl = url.searchParams.get('skybox') ?? bootstrap.skyboxUrl ?? null;
             const collisionUrl =
                 url.searchParams.get('collision') ?? url.searchParams.get('voxel') ?? bootstrap.collisionUrl ?? null;
-            const settingsUrl = url.searchParams.get('settings') ?? bootstrap.settingsUrl ?? './settings.json?v=4817843';
-            const contentUrl = url.searchParams.get('content') ?? bootstrap.contentUrl ?? './scene.foundry.json?v=4817843';
+            const settingsUrl = url.searchParams.get('settings') ?? bootstrap.settingsUrl ?? './settings.json?v=9d0f45a';
+            const contentUrl = url.searchParams.get('content') ?? bootstrap.contentUrl ?? './scene.foundry.json?v=9d0f45a';
             // the bootstrap's alone: a url param would let a link run any wasm in this origin
             const gsafDecoderUrl = bootstrap.gsafDecoderUrl ?? null;
 
@@ -126,7 +126,7 @@
     <body>
         <!-- Application Script -->
         <script type="module">
-            import { createViewer } from './index.js?v=4817843';
+            import { createViewer } from './index.js?v=9d0f45a';
 
             const { options, settings } = window.sse;
 

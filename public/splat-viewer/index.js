@@ -84278,7 +84278,7 @@ function diagnostics(app, setMode) {
                 emit(['Test complete', 'Exit AR to read results']);
                 output.textContent =
                     results.join('\n\n') +
-                        '\n\nUpload submission is CPU time, not GPU transfer time. GPU timing may be unavailable. Compare from the same viewpoint; this is an instrumented run.';
+                        '\n\nUpload submission is main-thread CPU time, not GPU transfer time. GPU spline evaluation and background sort-worker CPU time are not included in the CPU animation counter. GPU timing may be unavailable. Compare from the same viewpoint; this is an instrumented run.';
                 return;
             }
             setMode(stage);
@@ -84376,6 +84376,179 @@ async function readDownload(response, signal, report, expected) {
         signal.removeEventListener('abort', abort);
         reader.releaseLock();
     }
+}
+
+function readCode(k, width) {
+    const glsl = `
+        uniform float foundryTime;
+        uniform highp sampler2D foundryMotion;
+        uniform highp sampler2D foundryAppearance;
+        vec4 fRead(sampler2D tex, uint index) { return texelFetch(tex, ivec2(index % ${width}u, index / ${width}u), 0); }
+        vec4 fBlend(sampler2D tex) {
+            float f = clamp(foundryTime, 0.0, 1.0) * ${k - 1}.0;
+            uint left = min(${k - 2}u, uint(f));
+            uint index = splat.index * ${k}u + left;
+            return mix(fRead(tex,index), fRead(tex,index+1u), f-float(left));
+        }
+        vec3 getCenter() { return loadDataCenter().xyz + 0.5*tanh(fBlend(foundryMotion).xyz); }
+        vec4 getColor() {
+            vec4 value = loadDataColor() + fBlend(foundryAppearance);
+            vec4 result = 1.0 / (1.0 + exp(-value));
+            float gate = (foundryTime-loadDataCenter().w)/loadDataTiming().x;
+            result.a *= exp(-0.5*gate*gate);
+            return result;
+        }
+        vec3 getScale() { return loadDataScale().xyz; }
+        vec4 getRotation() { return loadDataRotation(); }
+    `;
+    const wgsl = `
+        uniform foundryTime: f32;
+        var foundryMotion: texture_2d<f32>;
+        var foundryAppearance: texture_2d<f32>;
+        fn fReadMotion(index: u32) -> vec4f { return textureLoad(foundryMotion,vec2i(i32(index % ${width}u),i32(index / ${width}u)),0); }
+        fn fReadAppearance(index: u32) -> vec4f { return textureLoad(foundryAppearance,vec2i(i32(index % ${width}u),i32(index / ${width}u)),0); }
+        fn fKnot() -> vec2f {
+            let f = clamp(uniform.foundryTime,0.0,1.0)*${k - 1}.0;
+            let left = min(${k - 2}.0,floor(f));
+            return vec2f(left,f-left);
+        }
+        fn getCenter() -> vec3f {
+            let knot=fKnot();let index=splat.index*${k}u+u32(knot.x);
+            return loadDataCenter().xyz+0.5*tanh(mix(fReadMotion(index),fReadMotion(index+1u),knot.y).xyz);
+        }
+        fn getColor() -> vec4f {
+            let knot=fKnot();let index=splat.index*${k}u+u32(knot.x);
+            let value=loadDataColor()+mix(fReadAppearance(index),fReadAppearance(index+1u),knot.y);
+            var result=vec4f(1.0)/(vec4f(1.0)+exp(-value));
+            let gate=(uniform.foundryTime-loadDataCenter().w)/loadDataTiming().x;
+            result.a*=exp(-0.5*gate*gate);
+            return result;
+        }
+        fn getScale() -> vec3f { return loadDataScale().xyz; }
+        fn getRotation() -> vec4f { return loadDataRotation(); }
+    `;
+    return { glsl, wgsl };
+}
+function gpuFormat(app, model) {
+    for (let i = 0; i < model.count; i++) {
+        for (let j = 14; j < 14 + 7 * model.k; j++) {
+            if (Math.abs(model.data[i * model.stride + j]) > 65504)
+                throw Error('GPU coefficient range exceeded; use ?cpu');
+        }
+    }
+    const width = Math.min(2048, app.graphicsDevice.maxTextureSize);
+    if (Math.ceil((model.count * model.k) / width) > app.graphicsDevice.maxTextureSize)
+        throw Error('Animation coefficients exceed GPU texture limits');
+    const code = readCode(model.k, width);
+    return new GSplatFormat(app.graphicsDevice, [
+        { name: 'dataCenter', format: PIXELFORMAT_RGBA32F },
+        { name: 'dataColor', format: PIXELFORMAT_RGBA32F },
+        { name: 'dataScale', format: PIXELFORMAT_RGBA16F },
+        { name: 'dataRotation', format: PIXELFORMAT_RGBA16F },
+        { name: 'dataTiming', format: PIXELFORMAT_RGBA32F }
+    ], { readGLSL: code.glsl, readWGSL: code.wgsl });
+}
+// CPU sorting on WebGL still needs moving centers. Compute them off the main thread,
+// at bounded frequency; actual visible motion/appearance is evaluated on the GPU every frame.
+const sorterWorker = `
+let positions,motion,k,count;
+function half(h){const s=h&32768?-1:1,e=(h>>10)&31,f=h&1023;return s*(e?(1+f/1024)*2**(e-15):f*2**-24);}
+onmessage=({data:d})=>{
+ if(d.init){positions=d.positions;motion=d.motion;k=d.k;count=positions.length/3;return;}
+ const out=new Float32Array(count*3),f=d.time*(k-1),left=Math.min(k-2,Math.floor(f)),mix=f-left;
+ for(let i=0;i<count;i++)for(let j=0;j<3;j++){
+ const at=(i*k+left)*4+j;
+ out[i*3+j]=positions[i*3+j]+.5*Math.tanh(half(motion[at])*(1-mix)+half(motion[at+4])*mix);
+ }
+ postMessage(out.buffer,[out.buffer]);
+};`;
+function setupGpu(app, entity, resource, model) {
+    const { count, k, stride, data, duration } = model, device = app.graphicsDevice;
+    const width = Math.min(2048, device.maxTextureSize), height = Math.ceil((count * k) / width);
+    const make = (name) => new Texture(device, {
+        name,
+        width,
+        height,
+        format: PIXELFORMAT_RGBA16F,
+        mipmaps: false,
+        minFilter: FILTER_NEAREST,
+        magFilter: FILTER_NEAREST,
+        addressU: ADDRESS_CLAMP_TO_EDGE,
+        addressV: ADDRESS_CLAMP_TO_EDGE
+    });
+    const motion = make('Foundry motion'), appearance = make('Foundry appearance');
+    const m = motion.lock(), a = appearance.lock();
+    const center = resource.getTexture('dataCenter'), color = resource.getTexture('dataColor'), timing = resource.getTexture('dataTiming');
+    const c = center.lock(), rgb = color.lock(), t = timing.lock();
+    const positions = new Float32Array(count * 3), half = FloatPacking.float2Half;
+    for (let i = 0; i < count; i++) {
+        const b = i * stride, p = i * 4;
+        for (let j = 0; j < 3; j++) {
+            c[p + j] = data[b + j];
+            positions[i * 3 + j] = data[b + j];
+            rgb[p + j] = data[b + 11 + j];
+        }
+        c[p + 3] = data[b + 14 + 7 * k];
+        rgb[p + 3] = data[b + 10];
+        t[p] = Math.exp(data[b + 15 + 7 * k]);
+        for (let key = 0; key < k; key++) {
+            const at = (i * k + key) * 4;
+            for (let j = 0; j < 3; j++) {
+                m[at + j] = half(data[b + 14 + key * 3 + j]);
+                a[at + j] = half(data[b + 14 + 3 * k + key * 3 + j]);
+            }
+            a[at + 3] = half(data[b + 14 + 6 * k + key]);
+        }
+    }
+    center.unlock();
+    color.unlock();
+    timing.unlock();
+    motion.unlock();
+    appearance.unlock();
+    entity.gsplat.setParameter('foundryMotion', motion);
+    entity.gsplat.setParameter('foundryAppearance', appearance);
+    entity.gsplat.setParameter('foundryTime', 0);
+    entity.gsplat.workBufferUpdate = WORKBUFFER_UPDATE_ALWAYS;
+    resource.centers = positions.slice();
+    resource.update(count);
+    let worker, pending = false, lastSort = -Infinity, closed = false;
+    if (!device.isWebGPU) {
+        const url = URL.createObjectURL(new Blob([sorterWorker], { type: 'text/javascript' }));
+        worker = new Worker(url);
+        URL.revokeObjectURL(url);
+        worker.onmessage = ({ data: buffer }) => {
+            if (closed)
+                return;
+            resource.centers = new Float32Array(buffer);
+            resource.update(count);
+            pending = false;
+            app.renderNextFrame = true;
+        };
+        worker.onerror = () => {
+            pending = false;
+            app.fire('foundry:error', Error('Animation depth-sort worker failed'));
+        };
+        const coefficients = m.slice();
+        worker.postMessage({ init: true, positions, motion: coefficients, k }, [positions.buffer, coefficients.buffer]);
+    }
+    const destroy = () => {
+        closed = true;
+        worker?.terminate();
+        motion.destroy();
+        appearance.destroy();
+    };
+    entity.once('destroy', destroy);
+    return (seconds) => {
+        const time = Math.max(0, Math.min(1, seconds / duration));
+        entity.gsplat.setParameter('foundryTime', time);
+        const now = performance.now();
+        if (worker && !pending && now - lastSort >= 100) {
+            pending = true;
+            lastSort = now;
+            worker.postMessage({ time });
+        }
+        app.renderNextFrame = true;
+    };
 }
 
 const interiors = new WeakMap();
@@ -84478,7 +84651,58 @@ function validateSimilarity(value) {
     return T;
 }
 
-const isFoundry = (url) => /(?:\.dynamic\.ply(?:\.gz)?|\.foundry\.json|(?:^|\/)scene\.json)(?:[?#]|$)/i.test(url);
+const MAGIC = 'FSP16V1\n';
+function isPacked(buffer) {
+    return new TextDecoder().decode(new Uint8Array(buffer, 0, Math.min(8, buffer.byteLength))) === MAGIC;
+}
+function halfToFloat(h) {
+    const sign = h & 0x8000 ? -1 : 1, exponent = (h >> 10) & 31, fraction = h & 1023;
+    return exponent === 31
+        ? fraction
+            ? NaN
+            : sign * Infinity
+        : sign * (exponent ? (1 + fraction / 1024) * 2 ** (exponent - 15) : fraction * 2 ** -24);
+}
+/** FSP16 v1: FP32 base attributes/timing; FP16 motion, appearance and visibility coefficients. */
+function parsePacked(buffer) {
+    if (!isPacked(buffer) || buffer.byteLength < 12)
+        throw Error('Invalid packed spline header');
+    const view = new DataView(buffer), headerLength = view.getUint32(8, true);
+    if (headerLength > 65536 || headerLength < 2 || 12 + headerLength > buffer.byteLength)
+        throw Error('Invalid packed spline metadata');
+    const { count, k, duration } = JSON.parse(new TextDecoder().decode(new Uint8Array(buffer, 12, headerLength)));
+    if (!Number.isSafeInteger(count) ||
+        count < 1 ||
+        !Number.isInteger(k) ||
+        k < 2 ||
+        k > 4096 ||
+        !Number.isFinite(duration) ||
+        duration <= 0)
+        throw Error('Invalid packed spline dimensions');
+    const start = 12 + headerLength, baseBytes = count * 14 * 4, coeffBytes = count * 7 * k * 2;
+    if (start + baseBytes + coeffBytes + count * 8 !== buffer.byteLength)
+        throw Error('Truncated or trailing packed spline payload');
+    const stride = 16 + 7 * k, data = new Float32Array(count * stride);
+    for (let i = 0; i < count; i++) {
+        const b = i * stride;
+        for (let j = 0; j < 14; j++)
+            data[b + j] = view.getFloat32(start + (i * 14 + j) * 4, true);
+        for (let j = 0; j < 7 * k; j++)
+            data[b + 14 + j] = halfToFloat(view.getUint16(start + baseBytes + (i * 7 * k + j) * 2, true));
+        data[b + stride - 2] = view.getFloat32(start + baseBytes + coeffBytes + i * 8, true);
+        data[b + stride - 1] = view.getFloat32(start + baseBytes + coeffBytes + i * 8 + 4, true);
+        if (!Math.hypot(...data.subarray(b + 6, b + 10)) || !(Math.exp(data[b + stride - 1]) > 0))
+            throw Error('Invalid packed spline activation');
+        for (let j = 3; j < 6; j++)
+            if (!(Math.exp(data[b + j]) <= 65504))
+                throw Error('Packed spline scale exceeds render range');
+    }
+    if (!data.every(Number.isFinite))
+        throw Error('Nonfinite packed spline parameters');
+    return { count, k, duration, stride, data };
+}
+
+const isFoundry = (url) => /(?:\.dynamic\.ply(?:\.gz)?|\.fsp(?:\.gz)?|\.foundry\.json|(?:^|\/)scene\.json)(?:[?#]|$)/i.test(url);
 async function fetchBytes(url, signal, report = () => {
     /* Later flipbook frames do not show the initial loading overlay. */
 }, expected, prefetched) {
@@ -84648,11 +84872,12 @@ async function loadFoundry(app, url, response, progress, signal, controls = true
             const bytes = await fetchBytes(resolve(config.model_url), signal, download(config.static_model_url ? 'subjects (1/2)' : 'scene'), config.model_bytes, json ? undefined : response);
             phase('Preparing animated splats…');
             await paint();
-            const model = parseSpline(bytes);
+            const model = isPacked(bytes) ? parsePacked(bytes) : parseSpline(bytes);
+            const gpu = !new URL(location.href).searchParams.has('cpu');
             if (disposed)
                 throw Error('Viewer destroyed');
             duration = model.duration;
-            container = new GSplatContainer(app.graphicsDevice, model.count, GSplatFormat.createDefaultFormat(app.graphicsDevice));
+            container = new GSplatContainer(app.graphicsDevice, model.count, gpu ? gpuFormat(app, model) : GSplatFormat.createDefaultFormat(app.graphicsDevice));
             const centerTexture = container.getTexture('dataCenter'), capacity = centerTexture.width * centerTexture.height * 4;
             const centers = new Float32Array(capacity), colors = new Float32Array(capacity);
             const scale = container.getTexture('dataScale'), rotation = container.getTexture('dataRotation');
@@ -84674,26 +84899,36 @@ async function loadFoundry(app, url, response, progress, signal, controls = true
             container.aabb.setMinMax(new Vec3(min), new Vec3(max));
             entity.addComponent('gsplat', { unified: true, resource: container });
             const resource = container;
-            apply = async (time) => {
-                const started = diagnostic ? performance.now() : 0;
-                evaluateSpline(model, time, centers, colors);
-                const evaluated = diagnostic ? performance.now() : 0;
-                centerTexture.lock().set(centers);
-                centerTexture.unlock();
-                const texture = resource.getTexture('dataColor'), target = texture.lock();
-                for (let i = 0; i < model.count * 4; i++)
-                    target[i] = toHalf(colors[i]);
-                texture.unlock();
-                const sortCenters = resource.centers;
-                for (let i = 0; i < model.count; i++)
-                    for (let j = 0; j < 3; j++)
-                        sortCenters[i * 3 + j] = centers[i * 4 + j];
-                resource.update(model.count);
-                entity.gsplat.workBufferUpdate = WORKBUFFER_UPDATE_ONCE;
-                if (diagnostic)
-                    app.fire('foundry:timing', evaluated - started, performance.now() - evaluated);
-                app.renderNextFrame = true;
-            };
+            if (gpu) {
+                const advance = setupGpu(app, entity, resource, model);
+                apply = async (time) => {
+                    const start = diagnostic ? performance.now() : 0;
+                    advance(time);
+                    if (diagnostic)
+                        app.fire('foundry:timing', 0, performance.now() - start);
+                };
+            }
+            else
+                apply = async (time) => {
+                    const started = diagnostic ? performance.now() : 0;
+                    evaluateSpline(model, time, centers, colors);
+                    const evaluated = diagnostic ? performance.now() : 0;
+                    centerTexture.lock().set(centers);
+                    centerTexture.unlock();
+                    const texture = resource.getTexture('dataColor'), target = texture.lock();
+                    for (let i = 0; i < model.count * 4; i++)
+                        target[i] = toHalf(colors[i]);
+                    texture.unlock();
+                    const sortCenters = resource.centers;
+                    for (let i = 0; i < model.count; i++)
+                        for (let j = 0; j < 3; j++)
+                            sortCenters[i * 3 + j] = centers[i * 4 + j];
+                    resource.update(model.count);
+                    entity.gsplat.workBufferUpdate = WORKBUFFER_UPDATE_ONCE;
+                    if (diagnostic)
+                        app.fire('foundry:timing', evaluated - started, performance.now() - evaluated);
+                    app.renderNextFrame = true;
+                };
             await apply(0);
         }
         let staticRoom;
@@ -84792,6 +85027,14 @@ async function loadFoundry(app, url, response, progress, signal, controls = true
                 config.label ||
                     (staticRoom ? 'Hybrid scene' : config.format === 'flipbook' ? 'PLY flipbook' : 'Continuous scene');
             panel.append(title);
+            if (config.format !== 'flipbook') {
+                const backend = document.createElement('p');
+                backend.style.cssText = 'margin:8px 0;font-size:12px';
+                backend.textContent = new URL(location.href).searchParams.has('cpu')
+                    ? 'CPU spline playback'
+                    : 'GPU spline playback';
+                panel.append(backend);
+            }
             const toggle = (name, set) => {
                 const label = document.createElement('label'), input = document.createElement('input');
                 label.style.cssText = 'display:block;margin-top:12px';
