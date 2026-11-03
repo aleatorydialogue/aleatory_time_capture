@@ -84157,6 +84157,45 @@ let OrbitController$1 = class OrbitController extends InputController$1 {
 	}
 };
 
+/** Filter vertex records without changing any retained splat attributes. Matrix is row-major. */
+function cropPly(buffer, crop, transform) {
+    if ([crop.min, crop.max].some((v) => !Array.isArray(v) || v.length !== 3 || !v.every(Number.isFinite)) ||
+        crop.min.some((v, i) => v >= crop.max[i]))
+        throw Error('Invalid room crop');
+    const bytes = new Uint8Array(buffer);
+    const header = new TextDecoder().decode(bytes.subarray(0, Math.min(bytes.length, 65536)));
+    const end = header.indexOf('end_header\n');
+    if (end < 0)
+        throw Error('Room crop requires a binary PLY header');
+    const text = header.slice(0, end + 11), lines = text.trim().split('\n');
+    const properties = lines.filter((l) => l.startsWith('property '));
+    const count = Number(lines.find((l) => l.startsWith('element vertex '))?.split(' ')[2]);
+    if (lines[1] !== 'format binary_little_endian 1.0' ||
+        lines.filter((l) => l.startsWith('element ')).length !== 1 ||
+        properties.some((l) => !l.startsWith('property float ')) ||
+        properties.slice(0, 3).join(',') !== 'property float x,property float y,property float z' ||
+        !Number.isSafeInteger(count) ||
+        count < 1)
+        throw Error('Unsupported room crop PLY schema');
+    const offset = new TextEncoder().encode(text).length, stride = properties.length * 4;
+    if (offset + stride * count !== bytes.length)
+        throw Error('Truncated room crop PLY');
+    const view = new DataView(buffer), kept = [];
+    for (let i = 0; i < count; i++) {
+        const b = offset + i * stride, p = [view.getFloat32(b, true), view.getFloat32(b + 4, true), view.getFloat32(b + 8, true), 1];
+        const q = transform.slice(0, 3).map((row) => row.reduce((s, v, j) => s + v * p[j], 0));
+        if (q.every((v, j) => Number.isFinite(v) && v >= crop.min[j] && v <= crop.max[j]))
+            kept.push(i);
+    }
+    if (!kept.length)
+        throw Error('Room crop removed every splat');
+    const newHeader = new TextEncoder().encode(text.replace(`element vertex ${count}`, `element vertex ${kept.length}`));
+    const result = new Uint8Array(newHeader.length + kept.length * stride);
+    result.set(newHeader);
+    kept.forEach((index, i) => result.set(bytes.subarray(offset + index * stride, offset + (index + 1) * stride), newHeader.length + i * stride));
+    return result.buffer;
+}
+
 const MODES = ['Room only', 'People only', 'Both animated', 'Both paused'];
 const SETUP = 30;
 const WARMUP = 3;
@@ -84172,7 +84211,7 @@ function diagnostics(app, setMode) {
     const output = document.createElement('pre');
     output.style.whiteSpace = 'pre-wrap';
     output.textContent =
-        'Enter AR. You have 30 seconds to place the room and move inside. Then hold a similar viewpoint for four automatic 18-second stages (3 seconds warmup + 15 seconds measured). Exit AR to read results. People and room files are unchanged.';
+        'Enter AR. Interior scenes start around you. You have 30 seconds to adjust your viewpoint (or place a diorama). Then hold a similar viewpoint for four automatic 18-second stages (3 seconds warmup + 15 seconds measured). Exit AR to read results. People and room files are unchanged.';
     panel.append(title, output);
     app.graphicsDevice.canvas.parentElement.append(panel);
     let active = false, elapsed = 0, stage = -1, last = 0, lastText = 0;
@@ -84339,6 +84378,8 @@ async function readDownload(response, signal, report, expected) {
     }
 }
 
+const interiors = new WeakMap();
+
 function parseSpline(buffer) {
     const bytes = new Uint8Array(buffer);
     const prefix = new TextDecoder().decode(bytes.subarray(0, 1048576));
@@ -84448,8 +84489,10 @@ async function fetchBytes(url, signal, report = () => {
         return new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer();
     return bytes;
 }
-async function staticAsset(app, url, signal, report, expected, preparing) {
-    const bytes = await fetchBytes(url, signal, report, expected);
+async function staticAsset(app, url, signal, report, expected, preparing, filter) {
+    let bytes = await fetchBytes(url, signal, report, expected);
+    if (filter)
+        bytes = filter(bytes);
     preparing?.();
     if (signal.aborted)
         throw Error('Viewer destroyed');
@@ -84515,6 +84558,20 @@ async function loadFoundry(app, url, response, progress, signal, controls = true
     const paint = () => new Promise((resolve) => setTimeout(resolve, 0));
     const entity = new Entity('Foundry scene', app);
     entity.setLocalEulerAngles(0, 0, 180);
+    if (config.scene_transform) {
+        const T = validateSimilarity(config.scene_transform), matrix = new Mat4();
+        matrix.set(T[0].map((_, i) => T.map((row) => row[i])).flat());
+        entity.setLocalPosition(matrix.getTranslation());
+        entity.setLocalRotation(new Quat().setFromMat4(matrix));
+        entity.setLocalScale(matrix.getScale());
+    }
+    if (config.interior && !new URL(location.href).searchParams.has('diorama')) {
+        if (!Array.isArray(config.interior.entry) ||
+            config.interior.entry.length !== 3 ||
+            !config.interior.entry.every(Number.isFinite))
+            throw Error('Invalid interior entry');
+        interiors.set(entity, config.interior);
+    }
     app.root.addChild(entity);
     const owned = new Set();
     let container;
@@ -84642,7 +84699,13 @@ async function loadFoundry(app, url, response, progress, signal, controls = true
         let staticRoom;
         if (config.static_model_url) {
             const T = validateSimilarity(config.T_dynamic_normalized_from_static_training);
-            const asset = await staticAsset(app, resolve(config.static_model_url), signal, download('room (2/2)'), config.static_model_bytes, () => phase('Preparing room…'));
+            const asset = await staticAsset(app, resolve(config.static_model_url), signal, download('room (2/2)'), config.static_model_bytes, () => phase('Preparing room…'), config.static_crop && !new URL(location.href).searchParams.has('uncropped')
+                ? (bytes) => {
+                    const scene = entity.getWorldTransform().data;
+                    const world = Array.from({ length: 4 }, (_, i) => Array.from({ length: 4 }, (_, j) => T.reduce((sum, row, k) => sum + scene[k * 4 + i] * row[j], 0)));
+                    return cropPly(bytes, config.static_crop, world);
+                }
+                : undefined);
             if (disposed) {
                 asset.unload();
                 if (app.assets)
@@ -99492,6 +99555,15 @@ class XrArPlacement {
      * where no hit test can be made, of the screen's touches or any pointer's, it is solid again.
      */
     start() {
+        if (this.grab.interior) {
+            this.active = true;
+            this.placed = true;
+            this.gliding = false;
+            this.grab.basePoint(this.goal);
+            this.fade.enabled = false;
+            this.hint.entity.enabled = false;
+            return;
+        }
         const { hitTest } = this.app.xr;
         if (this.released || !hitTest.supported)
             return;
@@ -101316,12 +101388,24 @@ class XrObjectGrab {
             this.paused = !!active;
         });
     }
+    get interior() {
+        return interiors.has(this.entity);
+    }
     /** Places the object in front of the rig, facing where it faces, from its authored transform. */
     place() {
         this.end();
         this.restoreHome();
         const { entity, rig } = this;
         const rigPosition = rig.getPosition();
+        const interior = interiors.get(entity);
+        if (interior && this.app.xr.type === 'immersive-ar') {
+            base.set(...interior.entry);
+            inverse.copy(entity.getWorldTransform()).invert();
+            inverse.transformPoint(base, this.pinLocal);
+            entity.setPosition(offset$2.sub2(rigPosition, base).add(this.homePosition));
+            this.placedScale = 1;
+            return;
+        }
         let scale;
         let reach;
         if (this.scene) {
