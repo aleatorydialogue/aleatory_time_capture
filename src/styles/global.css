@@ -272,7 +272,7 @@ h1 em {
   flex-direction: column;
 }
 .comparison .featured-card {
-  background: var(--color-surface-alt);
+  background: var(--color-neutral-accent);
 }
 .card-number {
   font-size: 0.66rem;
@@ -498,7 +498,7 @@ h1 em {
   display: grid;
   grid-template-columns: 0.85fr 1fr;
   gap: 8vw;
-  background: var(--color-surface-alt);
+  background: var(--color-neutral-accent);
 }
 .omnema h2 {
   margin-top: 2rem;
@@ -585,7 +585,7 @@ h1 em {
   top: -60px;
   right: -30px;
   border-radius: 50%;
-  background: var(--color-surface-alt);
+  background: var(--color-neutral-accent);
   box-shadow: none;
 }
 .status-pill {

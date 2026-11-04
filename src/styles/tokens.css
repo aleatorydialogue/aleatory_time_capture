@@ -4,6 +4,8 @@
   --palette-black: #0b0d12;
   --palette-charcoal: #151922;
   --palette-slate: #1c202a;
+  --palette-graphite: #292b2e;
+  --palette-graphite-raised: #34373a;
   --palette-white: #f2f1ee;
   --palette-gray: #b5b8c3;
   --palette-border: #343740;
@@ -19,6 +21,8 @@
   --color-background: var(--palette-black);
   --color-surface: var(--palette-charcoal);
   --color-surface-alt: var(--palette-slate);
+  --color-neutral-accent: var(--palette-graphite);
+  --color-neutral-accent-hover: var(--palette-graphite-raised);
   --color-text: var(--palette-white);
   --color-text-muted: var(--palette-gray);
   --color-border: var(--palette-border);
@@ -31,8 +35,8 @@
   --color-primary-action: var(--color-blue);
   --color-primary-action-hover: var(--palette-blue-hover);
   --color-on-primary: var(--color-background);
-  --color-secondary-action: var(--color-surface);
-  --color-secondary-action-hover: var(--color-surface-alt);
+  --color-secondary-action: var(--color-neutral-accent);
+  --color-secondary-action-hover: var(--color-neutral-accent-hover);
   --color-on-secondary: var(--color-text);
   --color-focus: var(--color-orange);
   --color-interactive-highlight: var(--color-orange);

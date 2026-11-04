@@ -117,3 +117,7 @@ Calculated contrast pairs, including the CSS-defined hover states:
 ## Blue-led revision
 
 Primary actions and brand details now use blue #48BBFF with dark text; hover uses #79CDFF. Focus, interactive guidance and the default presentation accent now use orange #FF622D. Notices swap to blue; lime success, pink artwork, error colors and actual media remain unchanged. This changes shared tokens and the favicon only, preserving layout and behavior.
+
+## Graphite accents
+
+Founder-approved homepage refinement: graphite #292B2E adds a neutral accent to the Spatial Memory comparison card, Omnema introduction block, Memory Dome circle, and secondary controls. Secondary hover uses #34373A. Blue remains the primary action and brand color. Layout, copy, media, and Omnema application styling are unchanged.
