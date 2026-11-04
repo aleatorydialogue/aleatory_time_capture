@@ -11,86 +11,154 @@ const sceneMB = Math.ceil(
 <BaseLayout>
   <div id="top" class="page-shell">
     <SiteHeader />
+
     <main id="main">
-      <section id="what-it-is" class="hero" aria-labelledby="hero-title">
-        <div>
-          <p class="section-index">Spatial capture / An ongoing experiment</p>
-          <h1 id="hero-title">Real moments,<br />reconstructed in space.</h1>
-        </div>
+      <section class="hero" aria-labelledby="hero-title">
         <div class="hero-copy">
-          <p>
-            We use multiple cameras to make explorable records of people,
-            places, and moments. Move through a scene and choose your own point
-            of view.
+          <p class="eyebrow">Experimental spatial capture</p>
+          <h1 id="hero-title">Aleatory <em>Time Capture</em></h1>
+          <p class="product-line">Remembering Presence</p>
+          <p class="hero-lede">
+            Real moments, reconstructed in space. We use multiple cameras to
+            create explorable records of people, places, and moments.
           </p>
           <div class="hero-actions">
-            <a class="text-link" href="#spatial-example">Explore a capture</a>
-            <a class="text-link" href="#apply">Apply for an early session</a>
+            <a class="button button-light" href="#apply"
+              >Apply for a Founding Capture <span aria-hidden="true">↘</span></a
+            >
+            <a class="text-link" href="#what-it-is"
+              >How it works <span aria-hidden="true">↓</span></a
+            >
           </div>
+          <p class="hero-caption">
+            A small experimental program, beginning in Connecticut.
+          </p>
+        </div>
+
+        <figure class="hero-film">
+          <video
+            data-hero-video
+            controls
+            loop
+            muted
+            playsinline
+            preload="metadata"
+            poster="/site_video/opal-58e2c44c43f74117-poster.jpg"
+            aria-describedby="hero-film-caption"
+          >
+            <source
+              src="/site_video/opal-58e2c44c43f74117.mp4"
+              type="video/mp4"
+            />
+            Your browser does not support embedded video. You can
+            <a href="/site_video/opal-58e2c44c43f74117.mp4"
+              >watch the capture study directly</a
+            >.
+          </video>
+          <figcaption id="hero-film-caption">
+            <span>Capture study · 00:40</span>
+            <a href="/site_video/opal-58e2c44c43f74117.mp4"
+              >Watch the film directly</a
+            >
+          </figcaption>
+        </figure>
+      </section>
+
+      <script is:inline>
+        const heroVideo = document.querySelector("[data-hero-video]");
+        const reducedMotion = window.matchMedia(
+          "(prefers-reduced-motion: reduce)",
+        );
+
+        if (heroVideo instanceof HTMLVideoElement && !reducedMotion.matches) {
+          heroVideo.play().catch(() => {
+            // The poster and native play control remain available if blocked.
+          });
+        }
+      </script>
+
+      <section
+        id="what-it-is"
+        class="manifesto section-pad"
+        aria-labelledby="manifesto-title"
+      >
+        <p class="section-index">01 / The idea</p>
+        <div>
+          <h2 id="manifesto-title">A scene you can move through.</h2>
+          <p>
+            A spatial reconstruction combines recordings from different camera
+            positions. You can look around the captured scene and choose your
+            own point of view.
+          </p>
         </div>
       </section>
 
       <section
+        class="comparison section-pad"
+        aria-label="Comparison of photographs, video, and spatial memories"
+      >
+        <article>
+          <span class="card-number">01</span>
+          <div class="medium-icon frame-icon" aria-hidden="true"></div>
+          <h3>Photography</h3>
+          <p>One perspective, chosen and held.</p>
+        </article>
+        <article>
+          <span class="card-number">02</span>
+          <div class="medium-icon sequence-icon" aria-hidden="true"></div>
+          <h3>Video</h3>
+          <p>A moment unfolding from one moving view.</p>
+        </article>
+        <article class="featured-card">
+          <span class="card-number">03</span>
+          <div class="medium-icon spatial-icon" aria-hidden="true"><i></i></div>
+          <h3>Spatial Memory</h3>
+          <p>A scene reconstructed from many viewpoints, ready to explore.</p>
+        </article>
+      </section>
+
+      <section
         id="spatial-example"
-        class="spatial-example"
+        class="spatial-example section-pad"
         aria-labelledby="example-title"
       >
         <div class="example-heading">
-          <div>
-            <p class="section-index">Capture study / 01</p><h2
-              id="example-title"
-            >
-              A moment at home
-            </h2>
-          </div>
+          <p class="section-index">Interactive experiment</p>
+          <h2 id="example-title">Move through a captured scene.</h2>
           <p>
-            A reconstructed room, with people in motion.<br />Load the scene to
-            change your viewpoint.
+            Drag to change your point of view. This experiment combines a static
+            room reconstruction with animated captured subjects.
           </p>
+          <p class="example-note">
+            The scene downloads about {sceneMB} MB plus viewer code when opened. Loading
+            and playback depend on your connection and device. Dynamic capture is
+            still experimental, and results vary by scene.
+          </p>
+          <a class="text-link" href="/site_video/opal-58e2c44c43f74117.mp4"
+            >Watch the film if the viewer cannot run</a
+          >
         </div>
         <div class="splat-stage" data-splat-stage>
           <div class="splat-placeholder">
-            <img
-              src="/site_video/opal-58e2c44c43f74117-poster.jpg"
-              width="1920"
-              height="1080"
-              alt="Film still showing a reconstructed room and the camera viewpoints used to capture it."
-              fetchpriority="high"
-            />
-            <div class="load-panel">
-              <button
-                class="button button-light"
-                type="button"
-                data-load-splat
-                aria-describedby="download-note">Load interactive scene</button
-              >
-              <p id="download-note">
-                About {sceneMB} MB + viewer · Loads only when selected
-              </p>
-            </div>
+            <span class="splat-orbit splat-orbit-one" aria-hidden="true"></span>
+            <span class="splat-orbit splat-orbit-two" aria-hidden="true"></span>
+            <span class="splat-point" aria-hidden="true"></span>
+            <button class="button button-light" type="button" data-load-splat>
+              Load interactive scene <span aria-hidden="true">↗</span>
+            </button>
+            <p>Click to load · approximately {sceneMB} MB</p>
           </div>
-          <noscript
-            ><p class="splat-noscript">
-              The viewer needs JavaScript. <a href="#capture-film"
-                >Watch the capture film below</a
+          <noscript>
+            <p class="splat-noscript">
+              JavaScript is required for the interactive viewer. You can
+              <a href="/site_video/opal-58e2c44c43f74117.mp4"
+                >watch the capture film</a
               >.
-            </p></noscript
-          >
+            </p>
+          </noscript>
         </div>
-        <div class="scene-caption">
-          <p>
-            Drag to look around. Use the viewer controls for movement and
-            playback.
-          </p>
-          <a class="text-link" href="#capture-film">Watch the film instead</a>
-        </div>
-        <p class="example-note">
-          This experiment combines a static room reconstruction with animated
-          captured subjects. It demonstrates an evolving approach to volumetric
-          video. Results and playback vary by scene and device. If the viewer
-          cannot run, the film below offers a recorded view.
-        </p>
       </section>
+
       <script is:inline>
         const stage = document.querySelector("[data-splat-stage]");
         const loadButton = stage?.querySelector("[data-load-splat]");
@@ -107,110 +175,111 @@ const sceneMB = Math.ceil(
       </script>
 
       <section
-        id="capture-film"
-        class="film-section section-pad"
-        aria-labelledby="film-title"
-      >
-        <div class="film-copy">
-          <p class="section-index">Recorded view / 00:40</p>
-          <h2 id="film-title">The capture film</h2>
-          <p>
-            A short presentation of the reconstruction. The film follows a set
-            viewpoint; the interactive scene lets you move independently.
-          </p>
-          <a class="text-link" href="/site_video/opal-58e2c44c43f74117.mp4"
-            >Open the film directly (MP4)</a
-          >
-        </div>
-        <video
-          controls
-          playsinline
-          preload="none"
-          poster="/site_video/opal-58e2c44c43f74117-poster.jpg"
-          aria-label="Forty-second capture study"
-        >
-          <source
-            src="/site_video/opal-58e2c44c43f74117.mp4"
-            type="video/mp4"
-          />
-          <a href="/site_video/opal-58e2c44c43f74117.mp4"
-            >Watch the capture film</a
-          >.
-        </video>
-      </section>
-
-      <section
         id="how-it-works"
         class="process section-pad"
         aria-labelledby="process-title"
       >
         <div class="process-heading">
-          <p class="section-index">Method</p>
-          <h2 id="process-title">Many views of<br />the same scene.</h2>
-          <p>
-            Each camera records part of what happened. We combine those views
-            into a reconstruction you can explore.
-          </p>
+          <p class="section-index">02 / The process</p>
+          <h2 id="process-title">How we capture.</h2>
         </div>
+        <ol class="steps">
+          <li>
+            <span>01</span>
+            <div>
+              <h3>Choose a scene</h3><p>
+                Tell us about the people, place, performance, or object you
+                would like to capture.
+              </p>
+            </div>
+          </li>
+          <li>
+            <span>02</span>
+            <div>
+              <h3>Capture from many views</h3><p>
+                We arrange multiple cameras around the scene and guide a capture
+                suited to the subject and setting.
+              </p>
+            </div>
+          </li>
+          <li>
+            <span>03</span>
+            <div>
+              <h3>Reconstruct the scene</h3><p>
+                The views are combined into a spatial scene using Gaussian
+                splatting and an evolving reconstruction workflow.
+              </p>
+            </div>
+          </li>
+          <li>
+            <span>04</span>
+            <div>
+              <h3>Review the result</h3><p>
+                We review what the recordings support and discuss possible
+                outputs. These may include a static scene or, where the capture
+                supports motion, volumetric video.
+              </p>
+            </div>
+          </li>
+        </ol>
+      </section>
+
+      <section
+        id="omnema"
+        class="omnema section-pad"
+        aria-labelledby="omnema-title"
+      >
         <div>
-          <ol class="steps">
-            <li>
-              <span>01</span><div>
-                <h3>Arrange the cameras</h3><p>
-                  We plan camera positions around the people, space, and
-                  movement involved.
-                </p>
-              </div>
-            </li>
-            <li>
-              <span>02</span><div>
-                <h3>Record and reconstruct</h3><p>
-                  The recordings provide the source material. Our current
-                  workflow uses Gaussian splatting to reconstruct the scene from
-                  those views.
-                </p>
-              </div>
-            </li>
-            <li>
-              <span>03</span><div>
-                <h3>Review what the capture supports</h3><p>
-                  A static reconstruction lets you explore a scene from
-                  different positions. Dynamic capture also records movement
-                  over time. Motion, lighting, and camera coverage affect the
-                  result; we discuss possible outputs for each session.
-                </p>
-              </div>
-            </li>
-          </ol>
-          <aside id="omnema" class="omnema" aria-labelledby="omnema-title">
-            <h3 id="omnema-title">Omnema / Capture tool</h3>
-            <p>
-              Our distributed capture application brings available phones
-              together to record synchronized video from multiple angles.
-            </p>
-            <a
-              class="text-link"
-              href="https://capture.rememberingpresence.com/auto">Open Omnema</a
-            >
-          </aside>
+          <p class="section-index">Our capture application</p>
+          <h2 id="omnema-title">Omnema</h2>
+        </div>
+        <div class="omnema-copy">
+          <p>
+            Omnema brings available phones together to record synchronized video
+            from multiple angles.
+          </p>
+          <p>
+            We use it to collect different views of the same scene for
+            reconstruction.
+          </p>
+          <a
+            class="button button-dark"
+            href="https://capture.rememberingpresence.com/auto"
+            >Open Omnema <span aria-hidden="true">↗</span></a
+          >
         </div>
       </section>
 
       <section class="founding section-pad" aria-labelledby="founding-title">
-        <p class="section-index">Founding Captures</p>
-        <div class="founding-copy">
-          <h2 id="founding-title">Early sessions in Connecticut.</h2>
+        <div class="founding-card">
+          <p class="eyebrow">Connecticut · Founding Captures</p>
+          <h2 id="founding-title">Early captures in Connecticut.</h2>
           <p>
             We are selecting a small number of scenes for experimental capture
-            sessions. A room, a gathering, a performance, or an object can be a
-            starting point.
+            sessions. Sessions are free or low-cost while we develop the
+            process. We discuss the scope and possible results individually.
           </p>
-          <p>
-            Sessions are free or low-cost while we develop the process. Each is
-            planned individually, with scope and possible results discussed
-            beforehand. We ask participants to share feedback.
-          </p>
+          <ul>
+            <li>For people in or near Connecticut</li>
+            <li>Designed individually around each scene</li>
+            <li>Results depend on the scene and conditions</li>
+            <li>Feedback is part of the experience</li>
+          </ul>
+          <a class="button button-dark" href="#apply"
+            >Tell us about your scene <span aria-hidden="true">↘</span></a
+          >
         </div>
+        <aside id="memory-dome" class="future-note">
+          <span class="future-orb" aria-hidden="true"></span>
+          <p class="section-index">A future studio</p>
+          <h3>The Memory Dome</h3>
+          <p>
+            A future portrait studio with cameras arranged around its subjects.
+            The Memory Dome is a longer-term concept and is not currently
+            available for sessions.
+          </p>
+          <span class="status-pill">Future vision</span>
+        </aside>
       </section>
 
       <section
@@ -219,8 +288,8 @@ const sceneMB = Math.ceil(
         aria-labelledby="apply-title"
       >
         <div class="apply-intro">
-          <p class="section-index">Applications</p>
-          <h2 id="apply-title">Tell us about<br />your scene.</h2>
+          <p class="section-index">03 / Applications</p>
+          <h2 id="apply-title">Tell us about your scene.</h2>
           <p>
             Describe what you would like to capture and where in or near
             Connecticut it would take place.
@@ -233,22 +302,17 @@ const sceneMB = Math.ceil(
         </div>
         <ApplicationForm />
       </section>
-      <aside id="memory-dome" class="future-note">
-        <p class="section-index">A future studio</p>
-        <p>
-          <strong>The Memory Dome.</strong> A dedicated studio with cameras arranged
-          around its subjects is a longer-term idea. It is not currently available
-          for sessions.
-        </p>
-      </aside>
     </main>
+
     <footer>
-      <a class="wordmark" href="#top">Remembering Presence</a>
-      <p>
-        An experimental spatial-memory project<br />by Aleatory Time Capture.
-      </p>
+      <a class="wordmark" href="#top"
+        ><span class="wordmark-mark" aria-hidden="true"></span><span
+          >Aleatory <i>Time Capture</i></span
+        ></a
+      >
+      <p>Preserving meaningful pieces of reality.</p>
       <p class="footer-meta">
-        Connecticut<br /><a href="https://aleatory.ai">Aleatory.ai</a> · <a
+        An experimental project by aleatory.ai · Connecticut · <a
           href="/privacy/">Privacy</a
         >
       </p>
