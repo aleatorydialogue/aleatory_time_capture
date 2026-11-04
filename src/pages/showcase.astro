@@ -1,0 +1,500 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+const outputs = [
+  {
+    id: "room",
+    number: "02",
+    title: "The place around you.",
+    category: "A captured space",
+    copy: "The familiar room, reconstructed as a place to look around. A quiet record of the setting that holds the moment.",
+  },
+  {
+    id: "people",
+    number: "03",
+    title: "Presence, in motion.",
+    category: "A moving portrait",
+    copy: "The people and their gestures, separated from the room. A different way to return to the same moment.",
+  },
+  {
+    id: "sculpture",
+    number: "04",
+    title: "A moment takes shape.",
+    category: "Sculptural study · experimental",
+    copy: "An interpreted three-dimensional form derived from the capture. A digital study toward a physical keepsake—not a finished print.",
+  },
+];
+---
+
+<BaseLayout
+  title="One moment, different ways to return — Aleatory"
+  description="Explore a capture through short films, a reconstructed room, a moving portrait and an experimental sculptural study."
+>
+  <div class="showcase">
+    <header class="gallery-header">
+      <a class="gallery-brand" href="/" aria-label="Aleatory Time Capture home"
+        ><span aria-hidden="true">●</span> aleatory <small>TIME CAPTURE</small
+        ></a
+      >
+      <a class="back-link" href="/#spatial-example"
+        >Explore the scene <span aria-hidden="true">↗</span></a
+      >
+    </header>
+    <main id="main">
+      <section class="intro">
+        <p class="kicker">REMEMBERING PRESENCE / CAPTURE STUDY 01</p>
+        <h1>One moment.<br /><em>More ways to return.</em></h1>
+        <div class="intro-bottom">
+          <p>
+            A room. The people in it. A small moment together.<br />Explore the
+            different forms a capture can take.
+          </p><span class="preview-note">Short films. No model download.</span>
+        </div>
+      </section>
+      <nav class="gallery-nav" aria-label="Explore outputs">
+        <a href="#scene">The scene</a><a href="#room">The space</a><a
+          href="#people">The people</a
+        ><a href="#sculpture">The object</a><a href="#film">The film</a>
+      </nav>
+      <section class="feature" id="scene" aria-labelledby="scene-title">
+        <div class="section-heading">
+          <span class="index">01 / SPATIAL MEMORY</span><span class="quiet"
+            >A rendered view of the reconstruction</span
+          >
+        </div>
+        <video
+          controls
+          playsinline
+          muted
+          loop
+          preload="none"
+          poster="/showcase-media/scene.jpg"
+          aria-label="Reconstructed family scene in its captured room"
+          ><source src="/showcase-media/scene.mp4" type="video/mp4" /><a
+            href="/showcase-media/scene.mp4">Watch the scene</a
+          ></video
+        >
+        <div class="feature-caption">
+          <div>
+            <h2 id="scene-title">Back in the room.</h2><p>
+              The captured space and moving people, brought together.<br />This
+              film follows one view; the interactive scene lets you choose your
+              own.
+            </p>
+          </div><a class="primary-link" href="/#spatial-example"
+            >Step inside <span aria-hidden="true">↗</span></a
+          >
+        </div>
+      </section>
+      <div class="output-grid">
+        {
+          outputs.map((output) => (
+            <section
+              class="output-card"
+              id={output.id}
+              aria-labelledby={output.id + "-title"}
+            >
+              <div class="section-heading">
+                <>
+                  <span class="index">{output.number}</span>
+                  <span class="quiet">{output.category}</span>
+                </>
+              </div>
+              <video
+                controls
+                playsinline
+                muted
+                loop
+                preload="none"
+                poster={"/showcase-media/" + output.id + ".jpg"}
+                aria-label={output.category}
+              >
+                <>
+                  <source
+                    src={"/showcase-media/" + output.id + ".mp4"}
+                    type="video/mp4"
+                  />
+                  <a href={"/showcase-media/" + output.id + ".mp4"}>
+                    Watch {output.category}
+                  </a>
+                </>
+              </video>
+              <>
+                <h2 id={output.id + "-title"}>{output.title}</h2>
+                <p>{output.copy}</p>
+              </>
+            </section>
+          ))
+        }
+      </div>
+      <section class="film-section" id="film" aria-labelledby="film-title">
+        <div class="film-copy">
+          <span class="index">05 / THE SHORT FILM</span><h2 id="film-title">
+            A little story<br />to take with you.
+          </h2><p>
+            A short edit of the capture and its reconstruction. An easy way to
+            watch and share the idea.
+          </p><a class="back-link" href="/site_video/opal-58e2c44c43f74117.mp4"
+            >Open the film <span aria-hidden="true">↗</span></a
+          >
+        </div>
+        <video
+          controls
+          playsinline
+          preload="none"
+          poster="/site_video/opal-58e2c44c43f74117-poster.jpg"
+          aria-label="Forty-second capture study film"
+          ><source
+            src="/site_video/opal-58e2c44c43f74117.mp4"
+            type="video/mp4"
+          /><a href="/site_video/opal-58e2c44c43f74117.mp4">Watch the film</a
+          ></video
+        >
+      </section>
+      <aside class="study-note">
+        <span class="index">ABOUT THIS STUDY</span><p>
+          These are examples from an experimental capture, not a list of
+          promised deliverables. Detail varies with the recording and viewpoint.
+          Sculptural interpretations may include inferred shapes.
+        </p>
+      </aside>
+      <section class="closing">
+        <p>What would you like to return to?</p><a
+          class="primary-link"
+          href="/#apply"
+          >Tell us about your moment <span aria-hidden="true">↗</span></a
+        >
+      </section>
+    </main>
+    <footer>
+      <a class="gallery-brand" href="/">aleatory <small>TIME CAPTURE</small></a
+      ><span>Remembering Presence</span><a href="/privacy/">Privacy</a>
+    </footer>
+  </div>
+  <script>
+    const videos = [...document.querySelectorAll("video")];
+    videos.forEach((video) =>
+      video.addEventListener("play", () => {
+        videos.forEach((other) => {
+          if (other !== video) other.pause();
+        });
+      }),
+    );
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) videos.forEach((video) => video.pause());
+    });
+  </script>
+</BaseLayout>
+<style>
+  .showcase {
+    --color-brand: var(--palette-orange);
+    --color-primary-action: var(--palette-orange);
+    --color-focus: var(--palette-blue);
+    max-width: 1440px;
+    margin: auto;
+    padding: 0 clamp(20px, 5vw, 80px);
+    color: var(--color-text);
+  }
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+  a:hover {
+    text-decoration: underline;
+    text-underline-offset: 5px;
+  }
+  a:focus-visible {
+    outline: 2px solid var(--palette-blue);
+    outline-offset: 6px;
+  }
+  .gallery-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 30px 0;
+    border-bottom: 1px solid var(--color-border);
+    gap: 20px;
+  }
+  .gallery-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 24px;
+    letter-spacing: -1px;
+  }
+  .gallery-brand > span {
+    font-size: 12px;
+    color: var(--palette-orange);
+  }
+  .gallery-brand small {
+    font: 10px/1.4 sans-serif;
+    letter-spacing: 2px;
+    margin-left: 5px;
+  }
+  .back-link {
+    font-size: 13px;
+    color: var(--palette-blue);
+  }
+  .back-link span {
+    margin-left: 12px;
+  }
+  .intro {
+    padding: 80px 0 42px;
+  }
+  .kicker,
+  .index {
+    font: 11px/1.5 sans-serif;
+    letter-spacing: 1.7px;
+  }
+  .kicker {
+    color: var(--palette-orange);
+    margin: 0 0 28px;
+  }
+  h1 {
+    max-width: none;
+    font-size: clamp(44px, 6.6vw, 92px);
+    line-height: 1.04;
+    letter-spacing: -0.055em;
+    margin: 0;
+    font-weight: 500;
+  }
+  h1 em {
+    font-style: normal;
+    color: var(--color-text-muted);
+  }
+  .intro-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    gap: 30px;
+    margin-top: 28px;
+  }
+  .intro-bottom p {
+    font-size: 16px;
+    line-height: 1.7;
+    margin: 0;
+    color: var(--color-text-muted);
+  }
+  .preview-note {
+    font-size: 12px;
+    color: var(--palette-blue);
+    white-space: nowrap;
+  }
+  .gallery-nav a:not(.nav-cta) {
+    display: inline-block;
+  }
+  .gallery-nav {
+    display: flex;
+    gap: 30px;
+    overflow-x: auto;
+    padding: 20px 0;
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+    font-size: 13px;
+    white-space: nowrap;
+  }
+  section[id] {
+    scroll-margin-top: 25px;
+  }
+  .feature {
+    padding: 40px 0 56px;
+  }
+  .section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .index {
+    color: var(--palette-orange);
+  }
+  .quiet {
+    color: var(--color-text-muted);
+    font-size: 11px;
+  }
+  video {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16/9;
+    object-fit: contain;
+    background: #000;
+    border: 1px solid var(--color-border);
+    border-radius: 3px;
+  }
+  .feature-caption {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    padding-top: 24px;
+  }
+  h2 {
+    font-size: clamp(24px, 2.7vw, 38px);
+    font-weight: 500;
+    letter-spacing: -0.035em;
+    line-height: 1.15;
+    margin: 0 0 12px;
+  }
+  p {
+    line-height: 1.7;
+    color: var(--color-text-muted);
+    font-size: 14px;
+  }
+  .primary-link {
+    display: inline-flex;
+    gap: 28px;
+    align-items: center;
+    background: var(--palette-orange);
+    color: var(--palette-black);
+    padding: 16px 22px;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    border-radius: 2px;
+  }
+  .primary-link:hover {
+    background: var(--palette-orange-hover);
+  }
+  .output-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 28px;
+    border-top: 1px solid var(--color-border);
+    padding: 38px 0 60px;
+  }
+  .output-card video {
+    aspect-ratio: 1;
+    object-fit: contain;
+  }
+  .output-card h2 {
+    font-size: 25px;
+    margin-top: 22px;
+  }
+  .output-card p {
+    margin-bottom: 0;
+  }
+  .output-card .section-heading {
+    align-items: start;
+    min-height: 34px;
+  }
+  .output-card .quiet {
+    text-align: right;
+  }
+  .film-section {
+    display: grid;
+    grid-template-columns: 1fr 1.7fr;
+    gap: 60px;
+    align-items: center;
+    border-top: 1px solid var(--color-border);
+    padding: 55px 0;
+  }
+  .film-copy h2 {
+    margin-top: 22px;
+  }
+  .film-copy p {
+    max-width: 300px;
+  }
+  .film-copy .back-link {
+    display: inline-block;
+    margin-top: 12px;
+  }
+  .study-note {
+    border-top: 1px solid var(--color-border);
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 30px;
+    padding: 28px 0;
+  }
+  .study-note p {
+    margin: 0;
+    font-size: 12px;
+    max-width: 620px;
+  }
+  .closing {
+    padding: 65px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+  }
+  .closing p {
+    color: var(--color-text);
+    font-size: clamp(24px, 3vw, 38px);
+    letter-spacing: -1px;
+  }
+  footer {
+    border-top: 1px solid var(--color-border);
+    padding: 28px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    color: var(--color-text-muted);
+    font-size: 12px;
+  }
+  @media (max-width: 760px) {
+    .intro {
+      padding-top: 48px;
+    }
+    .intro-bottom {
+      display: block;
+    }
+    .preview-note {
+      display: block;
+      margin-top: 20px;
+    }
+    .gallery-nav a:not(.nav-cta) {
+      display: inline-block;
+    }
+    .gallery-nav {
+      gap: 24px;
+    }
+    .gallery-header .back-link {
+      font-size: 11px;
+    }
+    .gallery-brand {
+      font-size: 21px;
+      gap: 8px;
+    }
+    .gallery-brand small {
+      font-size: 8px;
+      letter-spacing: 1px;
+    }
+    .output-grid {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+    .output-card video {
+      aspect-ratio: 16/10;
+    }
+    .output-card .section-heading {
+      min-height: 0;
+    }
+    .feature-caption,
+    .closing {
+      align-items: start;
+      flex-direction: column;
+    }
+    .film-section {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+    .study-note {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    .closing {
+      padding: 36px 0;
+    }
+    .closing p {
+      margin-bottom: 10px;
+    }
+    footer > span {
+      display: none;
+    }
+    .quiet {
+      max-width: 55%;
+      text-align: right;
+    }
+  }
+</style>
