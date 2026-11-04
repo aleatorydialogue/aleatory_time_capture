@@ -1,0 +1,44 @@
+/* Spectral Darkroom: shared primitives, then semantic roles. */
+:root {
+  color-scheme: dark;
+  --palette-black: #0b0d12;
+  --palette-charcoal: #151922;
+  --palette-slate: #1c202a;
+  --palette-white: #f2f1ee;
+  --palette-gray: #b5b8c3;
+  --palette-border: #343740;
+  --palette-control-border: #777c8b;
+  --palette-orange: #ff622d;
+  --palette-orange-hover: #ff804f;
+  --palette-lime: #a5f951;
+  --palette-blue: #48bbff;
+  --palette-pink: #ff73b5;
+  --palette-error: #ffaaa0;
+
+  --color-background: var(--palette-black);
+  --color-surface: var(--palette-charcoal);
+  --color-surface-alt: var(--palette-slate);
+  --color-text: var(--palette-white);
+  --color-text-muted: var(--palette-gray);
+  --color-border: var(--palette-border);
+  --color-control-border: var(--palette-control-border);
+  --color-orange: var(--palette-orange);
+  --color-lime: var(--palette-lime);
+  --color-blue: var(--palette-blue);
+  --color-pink: var(--palette-pink);
+  --color-brand: var(--color-orange);
+  --color-primary-action: var(--color-orange);
+  --color-primary-action-hover: var(--palette-orange-hover);
+  --color-on-primary: var(--color-background);
+  --color-secondary-action: var(--color-surface);
+  --color-secondary-action-hover: var(--color-surface-alt);
+  --color-on-secondary: var(--color-text);
+  --color-focus: var(--color-blue);
+  --color-interactive-highlight: var(--color-blue);
+  --color-selected: var(--color-lime);
+  --color-success: var(--color-lime);
+  --color-error: var(--palette-error);
+  --color-notice: var(--color-orange);
+  /* Presentation-only hook. Never override core actions or status with it. */
+  --color-session-accent: var(--color-blue);
+}

@@ -74,7 +74,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   .legal-page {
     min-height: 100vh;
     padding: clamp(2rem, 7vw, 7rem);
-    background: var(--paper);
+    background: var(--color-background);
   }
   .legal-back {
     display: inline-block;
@@ -87,10 +87,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   .legal-page h1 {
     max-width: none;
     margin: 1rem 0;
-    color: var(--ink);
+    color: var(--color-text);
   }
   .legal-updated {
-    color: #6a655b;
+    color: var(--color-text-muted);
     font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
@@ -98,7 +98,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   .legal-page section {
     max-width: 48rem;
     margin: 3rem 0;
-    border-top: 1px solid var(--line);
+    border-top: 1px solid var(--color-border);
     padding-top: 1.25rem;
   }
   .legal-page h2 {
@@ -107,7 +107,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     font-weight: 400;
   }
   .legal-page section p {
-    color: #514e46;
+    color: var(--color-text-muted);
     line-height: 1.7;
   }
   .legal-page section a {

@@ -15,6 +15,7 @@ When sources conflict, do not quietly choose one. Follow the higher-ranking sour
 ## Map
 
 - `product/product-context.md` — proposition, audiences, offer, lifecycle, and current boundaries
+- `brand/spectral-darkroom.md` — local color-system experiment and future session-theme guidance
 - `brand/brand-context.md` — brand role, personality, and experience principles
 - `brand/claims-and-terminology.md` — public-language and evidence guardrails
 - `website/website-brief.md` — v0 site purpose, journey, content, and success criteria
