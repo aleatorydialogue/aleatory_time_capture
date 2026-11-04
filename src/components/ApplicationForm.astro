@@ -50,13 +50,13 @@ const formAction = formReady ? configuredEndpoint : undefined;
   </label>
 
   <label>
-    <span>What would you want to remember?</span>
+    <span>What would you like to capture?</span>
     <textarea
       name="memory"
       rows="5"
       minlength="20"
       maxlength="1500"
-      placeholder="Tell us about the person, place, gathering, performance, or moment—and why it matters to you."
+      placeholder="Describe the people, place, objects, or movement involved."
       required></textarea>
   </label>
 
@@ -113,7 +113,7 @@ const formAction = formReady ? configuredEndpoint : undefined;
   }
 
   <button class="button button-dark" type="submit" disabled={!formReady}>
-    Submit an application <span aria-hidden="true">↗</span>
+    Submit an application
   </button>
   <p class="form-status" data-form-status aria-live="polite"></p>
 </form>

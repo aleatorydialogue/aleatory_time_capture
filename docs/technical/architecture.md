@@ -66,7 +66,7 @@ Exact scripts and CI configuration should be defined with scaffolding rather tha
 
 ## Current interactive example (2026-11-02)
 
-The founder requested publication of the mobile hybrid scene using the supplied Hugging Face assets. The homepage's click-to-load iframe serves the Foundry Viewer build from `public/splat-viewer/`. The application and scene/settings JSON are static GitHub Pages assets. The two PLY files remain on Hugging Face (`aleatorydialogue/stmodels`); they are not committed here. Total scene transfer is 129,778,180 bytes (about 130 MB), before viewer code.
+The founder requested publication of the mobile hybrid scene using the supplied Hugging Face assets. The homepage's click-to-load iframe serves the Foundry Viewer build from `public/splat-viewer/`. The application and scene/settings JSON are static GitHub Pages assets. The compressed dynamic FSP and static PLY files remain on Hugging Face (`aleatorydialogue/stmodels`); they are not committed here. Total scene transfer is 93,559,033 bytes (about 94 MB), before viewer code. The homepage derives this figure from the manifest.
 
 The iframe allows `fullscreen; xr-spatial-tracking`. WebGPU is preferred, with the viewer's WebGL fallback available. HTTPS and a compatible device/browser are required for XR; no headset compatibility claim is made. No model request is initiated until the visitor chooses to load the scene. Loading reports each asset's downloaded bytes and percentage, followed by preparation status. The scene configuration retains the registration transform and the original asset byte counts.
 
