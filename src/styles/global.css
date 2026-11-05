@@ -957,3 +957,11 @@ a:hover {
 .splat-placeholder .button-light:hover {
   background: var(--color-secondary-action-hover);
 }
+
+/* Sparse editorial accents matching the Opal closing palette. */
+#omnema .section-index {
+  color: var(--palette-lime);
+}
+#apply .section-index {
+  color: var(--palette-pink);
+}
