@@ -90,3 +90,7 @@ No production deployment is authorized.
 ## Homepage simplification (2026-11-04)
 
 The founder requested removal of the three icon-only Photography, Video, and Spatial Memory comparison cards. The idea section now leads directly into the real interactive capture example. This supersedes the earlier instruction to retain comparison cards; publication of this removal is authorized.
+
+## Updated homepage film (2026-11-05)
+
+The homepage film and direct film links use the final cinematic-v1 landscape render `opal-dbecf424acbb4dac` from session `979a5a1e-b156-47b9-80f6-78cfabb97b1d`, experiment `exec-b34dcaf34069`. The founder requested this replacement for current branding. The 1920×1080 H.264/AAC film is 18.517 seconds and 10,782,126 bytes. Its poster comes from one second into the same render. Existing muted playback, controls and reduced-motion handling are preserved.
