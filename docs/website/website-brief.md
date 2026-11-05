@@ -86,3 +86,7 @@ Form contracts, consent, privacy, and backend behavior remain unchanged.
 The original checkpoint is checkpoint/pre-editorial-refinement-2026-11-03
 (commit 1a7a746). The more extensive design remains in commit b4f919f for comparison.
 No production deployment is authorized.
+
+## Homepage simplification (2026-11-04)
+
+The founder requested removal of the three icon-only Photography, Video, and Spatial Memory comparison cards. The idea section now leads directly into the real interactive capture example. This supersedes the earlier instruction to retain comparison cards; publication of this removal is authorized.
