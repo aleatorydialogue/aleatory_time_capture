@@ -31,19 +31,19 @@
   --color-lime: var(--palette-lime);
   --color-blue: var(--palette-blue);
   --color-pink: var(--palette-pink);
-  --color-brand: var(--color-orange);
-  --color-primary-action: var(--color-orange);
-  --color-primary-action-hover: var(--palette-orange-hover);
+  --color-brand: var(--color-blue);
+  --color-primary-action: var(--color-blue);
+  --color-primary-action-hover: var(--palette-blue-hover);
   --color-on-primary: var(--color-background);
   --color-secondary-action: var(--color-neutral-accent);
   --color-secondary-action-hover: var(--color-neutral-accent-hover);
   --color-on-secondary: var(--color-text);
-  --color-focus: var(--color-blue);
-  --color-interactive-highlight: var(--color-blue);
+  --color-focus: var(--color-orange);
+  --color-interactive-highlight: var(--color-orange);
   --color-selected: var(--color-lime);
   --color-success: var(--color-lime);
   --color-error: var(--palette-error);
-  --color-notice: var(--color-orange);
+  --color-notice: var(--color-blue);
   /* Presentation-only hook. Never override core actions or status with it. */
-  --color-session-accent: var(--color-blue);
+  --color-session-accent: var(--color-orange);
 }
