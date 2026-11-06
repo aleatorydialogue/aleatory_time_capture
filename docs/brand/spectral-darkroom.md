@@ -121,3 +121,11 @@ Primary actions and brand details now use blue #48BBFF with dark text; hover use
 ## Graphite accents
 
 Founder-approved homepage refinement: graphite #292B2E adds a neutral accent to the Spatial Memory comparison card, Omnema introduction block, Memory Dome circle, and secondary controls. Secondary hover uses #34373A. Blue remains the primary action and brand color. Layout, copy, media, and Omnema application styling are unchanged.
+
+
+## Updated website accents
+
+The founder's blue/green/purple/yellow palette replaces orange with green,
+previous green accents with purple, and pink accents with yellow. Blue remains
+#48BBFF. Reference-image samples: green #20ea72, purple #a249fc, yellow #f1f437.
+The capture-application label is purple; the Applications label is yellow.

@@ -10,12 +10,12 @@
   --palette-gray: #b5b8c3;
   --palette-border: #343740;
   --palette-control-border: #777c8b;
-  --palette-orange: #ff622d;
-  --palette-orange-hover: #ff804f;
-  --palette-lime: #a5f951;
+  --palette-green: #20ea72;
+  --palette-green-hover: #51ef8a;
+  --palette-purple: #a249fc;
   --palette-blue: #48bbff;
   --palette-blue-hover: #79cdff;
-  --palette-pink: #ff73b5;
+  --palette-yellow: #f1f437;
   --palette-error: #ffaaa0;
 
   --color-background: var(--palette-black);
@@ -27,10 +27,10 @@
   --color-text-muted: var(--palette-gray);
   --color-border: var(--palette-border);
   --color-control-border: var(--palette-control-border);
-  --color-orange: var(--palette-orange);
-  --color-lime: var(--palette-lime);
+  --color-green: var(--palette-green);
+  --color-purple: var(--palette-purple);
   --color-blue: var(--palette-blue);
-  --color-pink: var(--palette-pink);
+  --color-yellow: var(--palette-yellow);
   --color-brand: var(--color-blue);
   --color-primary-action: var(--color-blue);
   --color-primary-action-hover: var(--palette-blue-hover);
@@ -38,12 +38,12 @@
   --color-secondary-action: var(--color-neutral-accent);
   --color-secondary-action-hover: var(--color-neutral-accent-hover);
   --color-on-secondary: var(--color-text);
-  --color-focus: var(--color-orange);
-  --color-interactive-highlight: var(--color-orange);
-  --color-selected: var(--color-lime);
-  --color-success: var(--color-lime);
+  --color-focus: var(--color-green);
+  --color-interactive-highlight: var(--color-green);
+  --color-selected: var(--color-purple);
+  --color-success: var(--color-purple);
   --color-error: var(--palette-error);
   --color-notice: var(--color-blue);
   /* Presentation-only hook. Never override core actions or status with it. */
-  --color-session-accent: var(--color-orange);
+  --color-session-accent: var(--color-green);
 }

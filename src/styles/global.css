@@ -958,10 +958,10 @@ a:hover {
   background: var(--color-secondary-action-hover);
 }
 
-/* Sparse editorial accents matching the Opal closing palette. */
+/* Sparse editorial accents matching the blue/green/purple/yellow palette. */
 #omnema .section-index {
-  color: var(--palette-lime);
+  color: var(--palette-purple);
 }
 #apply .section-index {
-  color: var(--palette-pink);
+  color: var(--palette-yellow);
 }
