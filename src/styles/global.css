@@ -965,3 +965,37 @@ a:hover {
 #apply .section-index {
   color: var(--palette-yellow);
 }
+
+/* Shared opening/closing brand lockup, matching the cinematic end card. */
+.site-header {
+  height: auto;
+  padding: clamp(1.5rem, 4vw, 3.5rem) 5vw 1.25rem;
+  flex-direction: column;
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+}
+.site-header nav {
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem 2rem;
+}
+.site-header nav a {
+  display: inline-block;
+}
+.brand-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: clamp(2rem, 5vw, 4rem) 5vw 2rem;
+  gap: 2.5rem;
+}
+.brand-footer .footer-meta {
+  font-family: var(--sans);
+  font-size: 0.66rem;
+  text-align: center;
+}
+@media (max-width: 560px) {
+  .site-header nav {
+    gap: 0.75rem 1rem;
+    font-size: 0.7rem;
+  }
+}

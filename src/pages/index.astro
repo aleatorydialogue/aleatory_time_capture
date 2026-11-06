@@ -1,5 +1,6 @@
 ---
 import ApplicationForm from "../components/ApplicationForm.astro";
+import BrandLockup from "../components/BrandLockup.astro";
 import SiteHeader from "../components/SiteHeader.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import scene from "../../public/splat-viewer/scene.foundry.json";
@@ -280,13 +281,8 @@ const sceneMB = Math.ceil(
       </section>
     </main>
 
-    <footer>
-      <a class="wordmark" href="#top"
-        ><span class="wordmark-mark" aria-hidden="true"></span><span
-          >aleatory <i>Time Capture</i></span
-        ></a
-      >
-      <p>Preserving meaningful pieces of reality.</p>
+    <footer class="brand-footer">
+      <BrandLockup />
       <p class="footer-meta">
         An experimental project by <span class="brand-name">aleatory</span> · Connecticut
         · <a href="/privacy/">Privacy</a>
