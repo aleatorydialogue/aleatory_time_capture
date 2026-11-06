@@ -1001,7 +1001,7 @@ a:hover {
 }
 
 .hero h1.product-line {
-  color: var(--palette-green);
+  color: var(--palette-white);
   max-width: none;
   font-size: clamp(1.15rem, 1.5vw, 1.4rem);
   line-height: 1.3;
