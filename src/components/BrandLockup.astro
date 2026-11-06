@@ -1,32 +1,69 @@
+---
+interface Props {
+  tagline?: boolean;
+  compact?: boolean;
+}
+const { tagline = true, compact = false } = Astro.props;
+---
+
 <a
-  class="brand-lockup"
+  class:list={["brand-lockup", { compact }]}
   href="/#top"
-  aria-label="Aleatory Time Capture — Preserving Human Presence, home"
+  aria-label={tagline
+    ? "Aleatory Time Capture — Preserving Human Presence, home"
+    : "Aleatory Time Capture, home"}
 >
-  <svg viewBox="0 0 1100 500" aria-hidden="true" focusable="false">
+  <svg
+    viewBox={compact
+      ? "0 0 1100 310"
+      : tagline
+        ? "0 0 1100 500"
+        : "0 0 1100 400"}
+    aria-hidden="true"
+    focusable="false"
+  >
     <circle
       cx="123"
-      cy="130"
-      r="56"
+      cy={compact ? 89 : 130}
+      r={compact ? 42 : 56}
       fill="none"
       stroke="var(--palette-white)"
       stroke-width="4"></circle>
-    <circle cx="174" cy="107" r="16" fill="var(--palette-blue)"></circle>
-    <text class="lockup-name" x="620" y="192" text-anchor="middle"
-      >Aleatory</text
+    <circle
+      cx={compact ? 161 : 174}
+      cy={compact ? 72 : 107}
+      r={compact ? 12 : 16}
+      fill="var(--palette-blue)"></circle>
+    <text
+      class="lockup-name"
+      x="620"
+      y={compact ? 135 : 192}
+      text-anchor="middle">Aleatory</text
     >
-    <text class="lockup-subtitle" x="550" y="288" text-anchor="middle"
-      >TIME CAPTURE</text
+    <text
+      class="lockup-subtitle"
+      x="550"
+      y={compact ? 194 : 288}
+      text-anchor="middle">TIME CAPTURE</text
     >
-    <g transform="translate(310 358)">
+    <g transform={compact ? "translate(310 222)" : "translate(310 358)"}>
       <rect width="100" height="17" fill="var(--palette-blue)"></rect>
       <rect x="100" width="226" height="17" fill="var(--palette-green)"></rect>
       <rect x="326" width="77" height="17" fill="var(--palette-purple)"></rect>
       <rect x="403" width="77" height="17" fill="var(--palette-yellow)"></rect>
     </g>
-    <text class="lockup-mission" x="550" y="465" text-anchor="middle"
-      >Preserving Human Presence</text
-    >
+    {
+      tagline && (
+        <text
+          class="lockup-mission"
+          x="550"
+          y={compact ? 294 : 465}
+          text-anchor="middle"
+        >
+          Preserving Human Presence
+        </text>
+      )
+    }
   </svg>
 </a>
 
@@ -71,5 +108,17 @@
     font-size: 46px;
     font-weight: 400;
     fill: var(--palette-gray);
+  }
+  .compact {
+    width: min(100%, 680px);
+  }
+  .compact .lockup-name {
+    font-size: 140px;
+  }
+  .compact .lockup-subtitle {
+    font-size: 36px;
+  }
+  .compact .lockup-mission {
+    font-size: 40px;
   }
 </style>
