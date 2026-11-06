@@ -24,3 +24,12 @@ The existing Pages workflow is unchanged. These assets remain excluded from sour
 Closing-palette-only rerender: opal-35950bdd739043f1. Same shots, timing,
 audio and brand settings as the original plan. Bar: #47B9F8 23%, #39E879 47%,
 #AA56F7 15%, #F2EC51 15%. Homepage uses this release asset; poster unchanged.
+
+Current hero: opal-0cb2ee6478454a82, 39 seconds, story-timelapse-v4.
+Includes verified static-room (15001 frames) and people (10001 frames)
+training captures from experiments/training-timelapse-20261105.
+Each short chapter selects actual optimizer states with logarithmic spacing
+and a final-state hold. Exact step mappings accompany both source clips.
+The people clip uses a fixed subject crop; no invented interpolation.
+Correct closing palette and existing poster retained. Previous films remain
+available as release assets for rollback.
