@@ -20,3 +20,7 @@ video remains available for rollback. No new audio or synthetic imagery was adde
 Founder authorized public deployment on November 5, 2026. Approved film/poster
 are release assets under homepage-film-20261105; the homepage references their versioned URLs directly.
 The existing Pages workflow is unchanged. These assets remain excluded from source Git.
+
+Closing-palette-only rerender: opal-35950bdd739043f1. Same shots, timing,
+audio and brand settings as the original plan. Bar: #47B9F8 23%, #39E879 47%,
+#AA56F7 15%, #F2EC51 15%. Homepage uses this release asset; poster unchanged.
