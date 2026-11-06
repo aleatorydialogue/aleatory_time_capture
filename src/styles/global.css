@@ -106,12 +106,12 @@ nav a {
 }
 
 .hero {
-  min-height: calc(100svh - 86px);
+  min-height: auto;
   background: var(--color-background);
   color: var(--color-text);
   display: grid;
   grid-template-columns: 1.03fr 0.97fr;
-  padding: 6vw 4vw 4vw;
+  padding: 3vw 4vw 4vw;
   gap: 5vw;
 }
 .hero-copy {
@@ -771,7 +771,7 @@ footer > p {
     min-height: auto;
   }
   .hero-copy {
-    min-height: 620px;
+    min-height: auto;
   }
   .manifesto,
   .spatial-example,
@@ -822,7 +822,7 @@ footer > p {
     font-size: 0.78rem;
   }
   .hero {
-    padding: 4.5rem 1.2rem 2rem;
+    padding: 2.25rem 1.2rem 2rem;
     gap: 2.75rem;
   }
   .hero-copy {
@@ -1001,8 +1001,22 @@ a:hover {
 }
 
 .hero h1.product-line {
+  color: var(--palette-green);
   max-width: none;
   font-size: clamp(1.15rem, 1.5vw, 1.4rem);
   line-height: 1.3;
   letter-spacing: 0.02em;
+}
+
+/* Halve the whitespace between the application and closing lockup. */
+.apply.section-pad {
+  padding-bottom: clamp(2.5rem, 4.5vw, 4.5rem);
+}
+.brand-footer {
+  padding-top: clamp(0.625rem, 1.25vw, 1rem);
+}
+@media (max-width: 560px) {
+  .apply.section-pad {
+    padding-bottom: 2.25rem;
+  }
 }
