@@ -1,6 +1,5 @@
 ---
 import ApplicationForm from "../components/ApplicationForm.astro";
-import BrandLockup from "../components/BrandLockup.astro";
 import SiteHeader from "../components/SiteHeader.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import scene from "../../public/splat-viewer/scene.foundry.json";
@@ -17,7 +16,8 @@ const sceneMB = Math.ceil(
       <section class="hero" aria-labelledby="hero-title">
         <div class="hero-copy">
           <p class="eyebrow">Experimental spatial capture</p>
-          <h1 id="hero-title" class="product-line">Remembering Presence</h1>
+          <h1 id="hero-title">aleatory <em>Time Capture</em></h1>
+          <p class="product-line">Remembering Presence</p>
           <p class="hero-lede">
             Real moments, reconstructed in space. We use multiple cameras to
             create explorable records of people, places, and moments.
@@ -280,8 +280,13 @@ const sceneMB = Math.ceil(
       </section>
     </main>
 
-    <footer class="brand-footer">
-      <BrandLockup compact />
+    <footer>
+      <a class="wordmark" href="#top"
+        ><span class="wordmark-mark" aria-hidden="true"></span><span
+          >aleatory <i>Time Capture</i></span
+        ></a
+      >
+      <p>Preserving meaningful pieces of reality.</p>
       <p class="footer-meta">
         An experimental project by <span class="brand-name">aleatory</span> · Connecticut
         · <a href="/privacy/">Privacy</a>

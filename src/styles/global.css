@@ -106,12 +106,12 @@ nav a {
 }
 
 .hero {
-  min-height: auto;
+  min-height: calc(100svh - 86px);
   background: var(--color-background);
   color: var(--color-text);
   display: grid;
   grid-template-columns: 1.03fr 0.97fr;
-  padding: 3vw 4vw 4vw;
+  padding: 6vw 4vw 4vw;
   gap: 5vw;
 }
 .hero-copy {
@@ -771,7 +771,7 @@ footer > p {
     min-height: auto;
   }
   .hero-copy {
-    min-height: auto;
+    min-height: 620px;
   }
   .manifesto,
   .spatial-example,
@@ -822,7 +822,7 @@ footer > p {
     font-size: 0.78rem;
   }
   .hero {
-    padding: 2.25rem 1.2rem 2rem;
+    padding: 4.5rem 1.2rem 2rem;
     gap: 2.75rem;
   }
   .hero-copy {
@@ -964,59 +964,4 @@ a:hover {
 }
 #apply .section-index {
   color: var(--palette-yellow);
-}
-
-/* Shared opening/closing brand lockup, matching the cinematic end card. */
-.site-header {
-  height: auto;
-  padding: clamp(1.5rem, 4vw, 3.5rem) 5vw 1.25rem;
-  flex-direction: column;
-  gap: clamp(1.5rem, 3vw, 2.5rem);
-}
-.site-header nav {
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 1rem 2rem;
-}
-.site-header nav a {
-  display: inline-block;
-}
-.brand-footer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: clamp(1.25rem, 2.5vw, 2rem) 5vw 1.25rem;
-  gap: 1.25rem;
-}
-.brand-footer .footer-meta {
-  font-family: var(--sans);
-  font-size: 0.66rem;
-  text-align: center;
-}
-@media (max-width: 560px) {
-  .site-header nav {
-    gap: 0.75rem 1rem;
-    font-size: 0.7rem;
-  }
-}
-
-.hero h1.product-line {
-  color: var(--palette-white);
-  max-width: none;
-  font-size: clamp(1.15rem, 1.5vw, 1.4rem);
-  line-height: 1.3;
-  letter-spacing: 0.02em;
-}
-
-/* Halve the whitespace between the application and closing lockup. */
-.apply.section-pad {
-  padding-bottom: clamp(2.5rem, 4.5vw, 4.5rem);
-}
-.brand-footer {
-  padding-top: clamp(0.625rem, 1.25vw, 1rem);
-}
-@media (max-width: 560px) {
-  .apply.section-pad {
-    padding-bottom: 2.25rem;
-  }
 }
