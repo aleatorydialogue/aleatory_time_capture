@@ -1,3 +1,4 @@
+import {fieldnotes} from './fieldnotes.js';
 const SITE_ORIGIN = "https://rememberingpresence.com";
 const ALLOWED_ORIGINS = new Set([
   SITE_ORIGIN,
@@ -78,6 +79,7 @@ async function sendApplicationEmail(data, request, env) {
 
 export default {
   async fetch(request, env) {
+    const media=await fieldnotes(request,env);if(media)return media;
     const url = new URL(request.url);
 
     if (request.method === "GET" && url.pathname === "/health") {
