@@ -99,6 +99,11 @@ nav {
 nav a {
   text-decoration: none;
 }
+.nav-omnema {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+}
 .nav-cta {
   border: 1px solid var(--color-border);
   padding: 0.7rem 1.1rem;
@@ -763,7 +768,10 @@ footer > p {
 }
 
 @media (max-width: 900px) {
-  nav a:not(.nav-cta) {
+  .site-header nav {
+    gap: 1rem;
+  }
+  .site-header nav a:not(.nav-cta, .nav-omnema) {
     display: none;
   }
   .hero {
@@ -959,6 +967,7 @@ a:hover {
 }
 
 /* Sparse editorial accents matching the blue/green/purple/yellow palette. */
+.nav-omnema,
 #omnema .section-index {
   color: var(--palette-purple);
 }
