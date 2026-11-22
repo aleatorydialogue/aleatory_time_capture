@@ -965,7 +965,10 @@ a:hover {
 }
 
 /* Sparse editorial accents matching the blue/green/purple/yellow palette. */
-.nav-omnema,
+.nav-omnema {
+  color: var(--color-text);
+  border-color: var(--palette-purple);
+}
 #omnema .section-index {
   color: var(--palette-purple);
 }
