@@ -99,12 +99,10 @@ nav {
 nav a {
   text-decoration: none;
 }
-.nav-omnema {
+.nav-cta {
   display: inline-flex;
   align-items: center;
   min-height: 2.75rem;
-}
-.nav-cta {
   border: 1px solid var(--color-border);
   padding: 0.7rem 1.1rem;
   border-radius: 999px;
@@ -771,7 +769,7 @@ footer > p {
   .site-header nav {
     gap: 1rem;
   }
-  .site-header nav a:not(.nav-cta, .nav-omnema) {
+  .site-header nav a:not(.nav-cta) {
     display: none;
   }
   .hero {
