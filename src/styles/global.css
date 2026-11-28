@@ -964,6 +964,58 @@ a:hover {
   background: var(--color-secondary-action-hover);
 }
 
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.site-header .nav-social {
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  justify-content: center;
+  border-color: var(--color-control-border);
+}
+.nav-social svg {
+  display: block;
+  width: 1.2rem;
+  height: 1.2rem;
+}
+.nav-social:first-child svg {
+  width: 1.4rem;
+  height: 1.4rem;
+}
+.nav-social:hover {
+  background: var(--color-surface-alt);
+}
+
+@media (max-width: 30rem) {
+  .site-header {
+    gap: 0.375rem;
+    padding-inline: 0.75rem;
+  }
+  .site-header .wordmark-name i {
+    display: block;
+    white-space: nowrap;
+  }
+  .nav-actions {
+    gap: 0.25rem;
+  }
+  .nav-actions .nav-cta:not(.nav-social) {
+    padding-inline: 0.625rem;
+  }
+}
+@media (max-width: 23rem) {
+  .site-header .wordmark-name i {
+    display: none;
+  }
+}
+@media (max-width: 21rem) {
+  .site-header .wordmark-name {
+    display: none;
+  }
+}
+
 /* Sparse editorial accents matching the blue/green/purple/yellow palette. */
 .nav-omnema {
   color: var(--color-text);

@@ -1,15 +1,49 @@
+---
+import YouTubeIcon from "../assets/social/youtube.svg";
+import XIcon from "../assets/social/twitter-x.svg";
+import TikTokIcon from "../assets/social/tiktok.svg";
+
+const profiles = [
+  {
+    name: "YouTube",
+    href: "https://www.youtube.com/@aleatoryTimeCapture",
+    Icon: YouTubeIcon,
+  },
+  { name: "X", href: "https://x.com/aleatorytimecap", Icon: XIcon },
+  {
+    name: "TikTok",
+    href: "https://www.tiktok.com/@aleatorytimecapture",
+    Icon: TikTokIcon,
+  },
+];
+---
+
 <header class="site-header">
   <a class="wordmark" href="#top" aria-label="aleatory Time Capture, home">
     <span class="wordmark-mark" aria-hidden="true"></span>
-    <span>aleatory <i>Time Capture</i></span>
+    <span class="wordmark-name">aleatory <i>Time Capture</i></span>
   </a>
   <nav aria-label="Primary navigation">
     <a href="#what-it-is">What it is</a>
     <a href="#how-it-works">How it works</a>
-    <a
-      class="nav-cta nav-omnema"
-      href="https://capture.rememberingpresence.com/auto">Omnema</a
-    >
-    <a class="nav-cta" href="#apply">Apply</a>
+    <div class="nav-actions">
+      {
+        profiles.map(({ name, href, Icon }) => (
+          <a
+            class="nav-cta nav-social"
+            href={href}
+            aria-label={`aleatory Time Capture on ${name}`}
+            title={name}
+          >
+            <Icon aria-hidden="true" focusable="false" />
+          </a>
+        ))
+      }
+      <a
+        class="nav-cta nav-omnema"
+        href="https://capture.rememberingpresence.com/auto">Omnema</a
+      >
+      <a class="nav-cta" href="#apply">Apply</a>
+    </div>
   </nav>
 </header>
